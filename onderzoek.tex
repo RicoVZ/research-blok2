@@ -176,6 +176,21 @@ The hashes for the Locky samples were collected from 'Ransomwaretracker'\footnot
 \textbf{TeslaCrypt}\\
 The hashes for the TeslaCrypt were collected from 'Ransomwaretracker' and given to us by the external malware researcher. \\\\The set for this family contains 115 samples, each of these files is a PE32 executable. TeslaCrypt is a ransomware family. The binaries in this set do not have to download all their configuration data, part of it is already embedded in the file in the form of  multiple URLS \cite{wyke-currans}. The Shannon Entropy score for each sample in this set is 6.068 or higher, the average is 6.777. this indicates that the samples are most likely packed executables, but could also be native executables containing compressed or encrypted sections \cite{hamrock-entropy}.
 
+\section{Recognizing the in-memory malware configuration}
+Yara is used to be able to recognize the memory of the processes containing the in-memory malware configurations. To be able to do this, a signature is needed for each malware family. The signatures were created by first using Cuckoo to analyse two or more samples from each family and then finding indicators of compromise(IOC) in the created memory dumps, and collecting IOCs from public sources. \\\\Each signature was tested on a set of 30 analyses of the corresponding malware family. While testing, the possibility of the malware not loading the configuration or crashing, was taken into account. therefore the goal was to get atleast 25 out of 30 matches, before considering a signature usable.
+
+
+introductie
+wat hebben we gedaan
+analyse bekeken 8 bekeken getest op 30 analyses.
+signatures gemaakt
+	getest op set analyses
+
+per malware vertellen wat in de signature
+	hoe aangepakt
+
+
+
 
 % trigger a \newpage just before the given reference
 % number - used to balance the columns on the last page
