@@ -1,7 +1,12 @@
 \documentclass[conference]{IEEEtran}
-\usepackage{pdfpages, etoolbox}
+\usepackage{pdfpages, etoolbox, afterpage}
 
 
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
 
 % *** GRAPHICS RELATED PACKAGES ***
 %
@@ -155,16 +160,15 @@ The measured results will be presented in a visual form by the use of charts and
 
 \section{Data Acquisition}
 
-The collected dataset consists of 460 malware samples. The malware families included in this set are Zeus and Vawtrak, which is banking malware, and the families Locky and TeslaCrypt, which are ransomware.  The samples were collected  by first searching for file hashes, which can be used to uniquely identify a file,  and then collecting the corresponding malware samples with the help of an external expert malware researcher. The researcher used his privileges with the online malware analysis platform VirusTotal, to obtain the malware samples. All collected file hashes are listed in appendix A.
+The collected dataset consists of 460 malware samples. The malware families included in this set are Zeus and Vawtrak, which is banking malware, and the families Locky and TeslaCrypt, which are ransomware.  The samples were collected  by first searching for file hashes, which can be used to uniquely identify a file,  and then collecting the corresponding malware samples with the help of an external expert malware researcher. The researcher used his privileges with the online malware analysis platform VirusTotal, to obtain the malware samples. The platforms 'Zeustracker', 'SSL Blacklist', and 'Ransomwaretracker' were used to collect hashes for Zeus, Vawtrak, Locky, and Teslacrypt. These platforms are all part of 'abuse.ch', a platform were malware C2s. binary hashes, and configurations are collected \footnote{https://zeustracker.abuse.ch/faq.php}. All collected file hashes are listed in appendix A.
 
 \subsection{Attributes}	
 This section contains information about each malware family and the collected samples for this family. It lists the amount of samples to be used, the file types in the dataset, and the entropy score for each file. A malware binary can be packed or encrypted in order to hide its code, any configuration data, and any other strings. These are the samples we want to use because they likely contain some form of configuration data. \\\\Compressed and encrypted binaries have a high entropy, this entropy can be measured in the form of Shannon Entropy \cite{hamrock-entropy}. The result of this measurement is a floating point number. Using this number and the table mentioned in \cite{hamrock-entropy}, which contains statistical measures based on different types of data, we can determine if a sample is most likely a native, packed or an encrypted executable.
 \\\\
 
 \textbf{Zeus}\\
-The hashes for the Zeus samples were collected from 'Zeustracker'\footnote{https://zeustracker.abuse.ch} and given to us by the external malware researcher. \\\\The set for this family contains 115 samples, each of these files is either a PE32 or an MS-DOS executable. Zeus is a banking malware family. During execution it will still need to download its configuration file. The URL of the location of this configuration file will be in memory during the execution of samples of this set \cite{wyke-zeus}. The Shannon Entropy score for each sample in the set is 6.578 or higher, the average is 6.936. this indicates that the samples are most likely packed executables \cite{hamrock-entropy}.
+The hashes for the Zeus samples were collected from 'Zeustracker'\footnote{https://zeustracker.abuse.ch} and also given to us by the external malware researcher. \\\\The set for this family contains 115 samples, each of these files is either a PE32 or an MS-DOS executable. Zeus is a banking malware family. During execution it will still need to download its configuration file. The URL of the location of this configuration file will be in memory during the execution of samples of this set \cite{wyke-zeus}. The Shannon Entropy score for each sample in the set is 6.578 or higher, the average is 6.936. this indicates that the samples are most likely packed executables \cite{hamrock-entropy}.\\
 
-\newpage
 \textbf{Vawtrak}\\
 The hashes for the Vawtrak samples were collected from \cite{sahin-vawtrak} and from 'SSL Blacklist'\footnote{https://sslbl.abuse.ch/}
 \\\\The set for this family contains 115 samples, each of these files is a PE32 executable. Vawtrak is a banking malware family. The binaries in this set do not have to download all their configuration data, part of it is already embedded in the file in the form of  multiple URLS \cite{kroustek-vawtrak}. The Shannon Entropy score for each sample in the set is 6.413 or higher, the average is 7.039. this score lies in between the score of packed and encrypted executables, meaning it could be either \cite{hamrock-entropy}.\\
@@ -177,17 +181,19 @@ The hashes for the Locky samples were collected from 'Ransomwaretracker'\footnot
 The hashes for the TeslaCrypt were collected from 'Ransomwaretracker' and given to us by the external malware researcher. \\\\The set for this family contains 115 samples, each of these files is a PE32 executable. TeslaCrypt is a ransomware family. The binaries in this set do not have to download all their configuration data, part of it is already embedded in the file in the form of  multiple URLS \cite{wyke-currans}. The Shannon Entropy score for each sample in this set is 6.068 or higher, the average is 6.777. this indicates that the samples are most likely packed executables, but could also be native executables containing compressed or encrypted sections \cite{hamrock-entropy}.
 
 \section{Recognizing the in-memory malware configuration}
-Yara is used to be able to recognize the memory of the processes containing the in-memory malware configurations. To be able to do this, a signature is needed for each malware family. The signatures were created by first using Cuckoo to analyse two or more samples from each family and then finding indicators of compromise(IOC) in the created memory dumps, and collecting IOCs from public sources. \\\\Each signature was tested on a set of 30 analyses of the corresponding malware family. While testing, the possibility of the malware not loading the configuration or crashing, was taken into account. therefore the goal was to get atleast 25 out of 30 matches, before considering a signature usable.
+Yara is used to be able to recognize the memory of the processes containing the in-memory malware configurations. To be able to do this, a signature is needed for each malware family. The signatures were created by first using Cuckoo to analyse two or more samples from each family and then finding indicators of compromise(IOC) in the created memory dumps, and collecting IOCs from public sources. \\\\Each signature was tested on a set of 30 analyses of the corresponding malware family. While testing, the possibility of the malware not loading the configuration or the malware process crashing, was taken into account. Therefore the goal was create a signature that matches at least 25 out of 30 cases, before considering the signature usable. \\\\This section will explain what Yara signature will be used to identify the in-memory configuration data for each malware family.\\ All created Yara signatures are listed in appendix B.\\
 
+\textbf{Signature: Zeus}
+\\The Zeus Yara signature consists of 18 IOCs in the form of a set of strings. These strings are filenames and are part of a URL stored in the configuration data in the process memory. These recurring strings were found by examining multiple Cuckoo analyses of Zeus and collected from a public source \cite{zeus-ioc}.\\The URLs were found by searching the memory for the resolved domain names by the malware during the Cuckoo analysis. The Zeus signature will match if any of the listed IOCs are found in a memory dump.\\
 
-introductie
-wat hebben we gedaan
-analyse bekeken 8 bekeken getest op 30 analyses.
-signatures gemaakt
-	getest op set analyses
+\textbf{Signature: Vawtrak}
+\\The Vawtrak Yara signature consists of 11 IOCs in the form of a set of strings. These strings are filenames and other data that are part of a URL stored in the configuration data in the process memory. These strings were collected by examining multiple Vawtrak Cuckoo analyses and from a public source \cite{vawtrak-ioc}.\\The URLs were found by searching the memory for resolved domain names by the malware during the Cuckoo analysis. The Vawtrak signature will match if any of the listed IOCs are found in a memory dump.\\
 
-per malware vertellen wat in de signature
-	hoe aangepakt
+\textbf{Signature: Locky}
+\\The Locky Yara signature consists of five IOCs: three strings and two byte sequences. Part of this signature was given made available for this research by Jurriaan Bremer, a Cuckoo Sandbox developer and malware researcher. The part of the signature made available is a byte sequence. This byte sequence is the start of the RSA public key structure which Locky uses. The second byte sequence used is part of the instructions file which Locky creates on a user's desktop after the encryption of all files. It serves the purpose to notify a user that their files have been encrypted. The strings are URL fields used by Locky and two strings that are also part of the instructions file.\\All IOCs, except for the RSA structure byte sequence, were collected by examining multiple Locky Cuckoo analyses and from a public source \cite{nelson-locky}. The Locky signature will match if any of the IOCs are found in a memory dump.\\
+
+\textbf{Signature: Teslacrypt}
+\\The Teslacrypt Yara signature consists of three IOCs: one byte sequence and two strings. One string is part of the instructions file which Teslacrypt creates to notify the user their files have been encrypted. The second string is part of a TOR Network URL which is presented to the user to pay the ransom and restore their files. The byte sequence consists of URL form fields with wildcards between them. These wildcards were used so that the signature would still match if the form fields contain any data.\\All IOCs used in this signature were found by examining multiple Teslacrypt Cuckoo analyses. The Teslacrypt signature will match if any of the IOCs are found in a memory dump.\\
 
 
 
@@ -270,11 +276,24 @@ Sophos, 2016, pp. 34-42.
 
 \bibitem{nelson-locky}
 P. Nelson, "Locky Ransomware Analysis",
-Stern Security, 2015. 
+https://www.sternsecurity.com/blog/locky-ransomware-analysis
+Stern Security, 2015.
+
+\bibitem{zeus-ioc}
+Sourcefire Vulnerability Research Team, "Zeus Trojan Analysis"
+https://labs.snort.org/papers/zeus.html
+Sourcefire
+
+\bibitem{vawtrak-ioc}
+D. Huss and M. Mesa, "In the Shadows: Vawtrak Aims to Get Stealthier by adding New Data Cloaking",
+https://www.proofpoint.com/us/threat-insight/post/In-The-Shadows
+Proofpoint, 2015
 
 \end{thebibliography}
 
-\includepdf[pages={7-9}]{proposal-onderzoel-v5.pdf}
+\afterpage{\blankpage}
+\includepdf[pages={1-3}]{appendices/Appendix-A-hashes.pdf}
+\includepdf[pages={1-4}]{appendices/Appendix-B-signatures.pdf}
 
 
 \end{document}
