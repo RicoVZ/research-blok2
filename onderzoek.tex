@@ -198,24 +198,22 @@ Yara is used to be able to recognize the memory of the processes containing the 
 
 
 \section{Analysis results}
-This section contains the per-family results of the measurement performed process memory dumps created during Cuckoo Sandbox analyses with a length of 300 seconds. Two types of malware were used: Banking malware and Ransomware.  For these types the families Zeus, Vawtrak (Banking malware), Teslacrypt, and Locky (Ransomware) were used.\\\\ The analysis results a grouped into different types of behavior. For each of these groups a possible reason is given which explains why the results are what was measured.
+This section contains the per-family results of the measurement performed process memory dumps created during Cuckoo Sandbox analyses with a length of 300 seconds. Two types of malware were used: Banking malware and Ransomware.  For these types the families Zeus, Vawtrak (Banking malware), Teslacrypt, and Locky (Ransomware) were used.\\\\ The analysis results a grouped into different types of behavior. For each of these groups a possible reason is given which explains why the results are what was measured. During the examination of the measured results, multiple types of behavior were found. These different types of behavior are the cause for the differences in the amount of in-memory configurations found at a certain time interval. The types of behavior are grouped together for each family. Each of these groups is briefly explained and a corresponding timeline for that group is shown.
 
 
 \subsection{Results Zeus}
 The analysis of the Zeus family resulted in data for 104 out of 115 used malware samples. 11 of the samples crashed upon execution. These samples are not part of any timelines or charts discussed in this subsection. Figure \ref{fig:zeus-bar} shows the presence of configuration data for all measured Zeus analyses. This chart was created by combining the timelines for all Zeus analyses. All seperate timelines can be found at \footnote{https://oege.ie.hva.nl/\textasciitilde{}zutpher003/research2016/zeus/}.\\
 
-\begin{figure}[h]
+\begin{figure}[!h]
 	\hspace{-3cm}
     \includegraphics[width=13cm,trim=-70mm 0mm 0mm 9mm, clip=true]{zeus/Zeus-barchart.eps}
     \caption{A chart showing the combined timelines of presence of configuration data during the analysis of all Zeus samples}
     \label{fig:zeus-bar}
 \end{figure}
 
-During the examination of the measurement results, multiple types of behavior were found. These different types of behavior are the cause of the differences in the amount of in-memory configurations found at a certain time interval. The types of behavior were grouped into three different groups. Each of these groups is briefly explained and a corresponding timeline for that group is shown.\\
-
-
+\newpage
 \textbf{Normal Zeus behavior}
-\\Analyses in this group display de 'normal' Zeus behavior: \cite{wyke-zeus} after execution of the first binary, its process creates a copy of itself to a second binary. The first process then starts a second process using the copied binary and writes to its process memory, after which, the first process terminates.\\ Shortly after the second process being started, it starts unpack a third binary file by to reading from its own binary. As soon as this is done, a process is started using the third binary.
+\\Analyses in this group display the 'normal' Zeus behavior: \cite{wyke-zeus} after execution of the first binary, its process creates a copy of itself to a second binary. The first process then starts a second process using the copied binary and writes to its process memory, after which, the first process terminates.\\ Shortly after the second process being started, it starts unpack a third binary file by to reading from its own binary. As soon as this is done, a process is started using the third binary.
 \\\\The third binary is the actual Zeus malware which performs the malicious actions. It is possible that this third binary also copied itself and creates a process of this copy, but this is not always the case. Before trying to perform a range of different malicious actions (collecting passwords, editing settings etc), the malicious process tries to contact its C2. After this step, a batch script is created which deletes all previous binary files used to infect the system. Up until this moment, the configuration data included in the binary, is found in the memory. The process of copying, unpacking, contacting the C2, and erasing the binaries used to infect the system takes from 10 to 100 seconds. This is also the time the configuration data is present in the memory. The average is 40 seconds.  Figure \ref{fig:zeus-timeline-normal} is a corresponding timeline for this group. \\\\A second type of behavior is included in this group. It is similar to the type mentioned above. The difference is that this type does not start by copying itself, but by first delaying execution time by making the first process 'sleep'. After the sleep, normal execution resumes. The average time of when the configuration data is in memory is from 70 to 130 seconds. Figure \ref{fig:zeus-timeline-normal-delay} shows a timeline of an analysis of this type.
 
 
@@ -249,6 +247,25 @@ During the examination of the measurement results, multiple types of behavior we
     \caption{A timeline showing the average of in-memory configuration data for the 'Idle or failed' group}
     \label{fig:zeus-timeline-idle}
 \end{figure}
+
+\newpage
+
+\subsection{Results Vawtrak}
+The analysis of the Vawtrak family resulted in data for 107 out of 115 used malware samples. 8 of the samples crashed upon execution. These samples are not part of any timelines or charts discussed in this subsection. Figure \ref{fig:vawtrak-bar} shows the presence of configuration data for all measures Vawtrak analyses. This chart was created by combining the timelines for all Vawtrak analyses. All seperate timelines can be found at \footnote{https://oege.ie.hva.nl/\textasciitilde{}zutpher003/research2016/vawtrak/}.
+
+
+\begin{figure}[h]
+	\hspace{-3cm}
+    \includegraphics[width=13cm,trim=-70mm 0mm 0mm 9mm, clip=true]{vawtrak/Vawtrak-barchart.eps}
+    \caption{A chart showing the combined timelines of presence of configuration data during the analysis of all Vawtrak samples}
+    \label{fig:vawtrak-bar}
+\end{figure}
+
+\newpage
+\textbf{Brief Vawtrak behavior}
+\\Analyses in this group do display Vawtrak behavior\cite{kroustek-vawtrak}, but only briefly. After the execution of its binary, the process starts by looking for registry keys and file paths of commonly used software and tries to find stored credentials. The process then tries contact its C2. These connections fail and it then creates a Windows batch file containing code to delete the Vawtrak binary and itself. This file is then executed. Timelines for this group of analyses show that the configuration data is present in the memory for 10 to 30 seconds.
+
+
 
 
 % trigger a \newpage just before the given reference
