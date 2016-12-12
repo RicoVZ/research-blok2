@@ -212,8 +212,8 @@ The analysis of the Zeus family resulted in data for 104 out of 115 used malware
 \end{figure}
 
 \newpage
-\textbf{Normal Zeus behavior}
-\\Analyses in this group display the 'normal' Zeus behavior: \cite{wyke-zeus} after execution of the first binary, its process creates a copy of itself to a second binary. The first process then starts a second process using the copied binary and writes to its process memory, after which, the first process terminates.\\ Shortly after the second process being started, it starts unpack a third binary file by to reading from its own binary. As soon as this is done, a process is started using the third binary.
+\textbf{Expected Zeus behavior}
+\\Analyses in this group display the expected Zeus behavior: \cite{wyke-zeus} after execution of the first binary, its process creates a copy of itself to a second binary. The first process then starts a second process using the copied binary and writes to its process memory, after which, the first process terminates.\\ Shortly after the second process being started, it starts unpack a third binary file by to reading from its own binary. As soon as this is done, a process is started using the third binary.
 \\\\The third binary is the actual Zeus malware which performs the malicious actions. It is possible that this third binary also copied itself and creates a process of this copy, but this is not always the case. Before trying to perform a range of different malicious actions (collecting passwords, editing settings etc), the malicious process tries to contact its C2. After this step, a batch script is created which deletes all previous binary files used to infect the system. Up until this moment, the configuration data included in the binary, is found in the memory. The process of copying, unpacking, contacting the C2, and erasing the binaries used to infect the system takes from 10 to 100 seconds. This is also the time the configuration data is present in the memory. The average is 40 seconds.  Figure \ref{fig:zeus-timeline-normal} is a corresponding timeline for this group. \\\\A second type of behavior is included in this group. It is similar to the type mentioned above. The difference is that this type does not start by copying itself, but by first delaying execution time by making the first process 'sleep'. After the sleep, normal execution resumes. The average time of when the configuration data is in memory is from 70 to 130 seconds. Figure \ref{fig:zeus-timeline-normal-delay} shows a timeline of an analysis of this type.
 
 
@@ -228,23 +228,23 @@ The analysis of the Zeus family resulted in data for 104 out of 115 used malware
 
 \begin{figure}[h]
     \includegraphics[width=8cm,scale=0.5]{zeus/zeus-timelines-eps/Zeus-bcf97e3d33adf99bcbbe564b0a7fb4444b6b5eba3ebeaf35af47d840cf2b53ab.eps}
-    \caption{A timeline showing the average of in-memory configuration data for an analysis in the 'Normal' group}
+    \caption{A Zeus timeline showing the average of in-memory configuration data for an analysis in the 'Expected' group}
     \label{fig:zeus-timeline-normal}
 \end{figure}
 \begin{figure}[h]
     \includegraphics[width=8cm,scale=0.5]{zeus/zeus-timelines-eps/Zeus-9e2f9b904100dff4167de7b171c6f595cf8cfccb2fbfc6a13f90aeb970d41574.eps}
-    \caption{A timeline showing the average of in-memory configuration data for an analysis the 'Normal' group, but with a delay in execution at the start}
+    \caption{A Zeus timeline showing the average of in-memory configuration data for an analysis the 'Expected' group, but with a delay in execution at the start}
     \label{fig:zeus-timeline-normal-delay}
 \end{figure}
 \begin{figure}[h]
     \includegraphics[width=8cm,scale=0.5]{zeus/zeus-timelines-eps/Zeus-db41194de27c68e8fd10bdbc107bae5c91fb8ebf340802c3844aed7d733a9674.eps}
-    \caption{A timeline showing the average of in-memory configuration data for an analysis in the
+    \caption{A Zeus timeline showing the average of in-memory configuration data for an analysis in the
     'Explorer.exe injection' group}
     \label{fig:zeus-timeline-injection}
 \end{figure}
 \begin{figure}[!h]
     \includegraphics[width=8cm,scale=0.5]{zeus/zeus-timelines-eps/Zeus-e385729e2bf3e10aac9bf0a5cbe96cb84643b0c378a744e1e7216ddf4d485fac.eps}
-    \caption{A timeline showing the average of in-memory configuration data for the 'Idle or failed' group}
+    \caption{A Zeus timeline showing the average of in-memory configuration data for the 'Idle or failed' group}
     \label{fig:zeus-timeline-idle}
 \end{figure}
 
@@ -262,9 +262,41 @@ The analysis of the Vawtrak family resulted in data for 107 out of 115 used malw
 \end{figure}
 
 \newpage
-\textbf{Brief Vawtrak behavior}
-\\Analyses in this group do display Vawtrak behavior\cite{kroustek-vawtrak}, but only briefly. After the execution of its binary, the process starts by looking for registry keys and file paths of commonly used software and tries to find stored credentials. The process then tries contact its C2. These connections fail and it then creates a Windows batch file containing code to delete the Vawtrak binary and itself. This file is then executed. Timelines for this group of analyses show that the configuration data is present in the memory for 10 to 30 seconds.
 
+\textbf{Expected Vawtrak behavior}
+\\Analyses in this group are of multiple types, they all display the expected Vawtrak behavior \cite{kroustek-vawtrak}, but with slight differences that are noticable in the timeline. \\After the execution of the binary, the process starts by looking for registry keys and file paths of commonly used software and tries to find stored credentials. At this point, the configuration data is in the memory. The next step taken differs per type of analysis: some start a one to two minute execution delay by making the process sleep, and after the delay try to contact its C2. The other type does not delay the execution and  tries to communicate with its C2 immediately after the step of collecting credentials.\\ Timelines for this group show that the configuration data is present in the memory 10 to 200 after the analysis has started. Figure \ref{fig:vawtrak-timeline-normal} shows a timeline for an analysis of this group.\\
+
+
+\textbf{Brief Vawtrak behavior}
+\\Analyses in this group do display Vawtrak behavior\cite{kroustek-vawtrak}, but only briefly. After the execution of its binary, the process starts by looking for registry keys and file paths of commonly used software and tries to find stored credentials. The process does not try to contact its C2. The next step taken is creating a Windows batch file containing code to delete the Vawtrak binary and itself. This file is then executed. Timelines for this group of analyses show that the configuration data is present in the memory for 10 to 30 seconds after the analysis has started. Figure \ref{fig:vawtrak-timeline-brief} shows a timeline for an analysis of this group.\\
+
+\textbf{Injection into other process}
+\\Analyses in this group start by delaying execution by sleeping for one to two minutes, during which the configuration data is not present in the memory. After the delay, the process starts unpacking a second binary from its own binary. At this time, the configuration data is present in the memory. When the process has finished unpacking the second binary, it configures Windows to start the binary at Windows startup. The last step taken is injecting itself into another process by acquiring a process handle and writing to its memory. The Windows process being injected seems to be different every analysis. Figure \ref{fig:vawtrak-timeline-injection} shows a timeline for an analysis of this group.\\
+
+\textbf{Idle}
+\\Analyses in this group do not have any configuration data in the memory at any point during the analysis. The started process delays the analysis by sleeping immediately after  being executed. These sleeps last for one to three minutes, after which it injects itself into another processy acquiring a process handle and writing to its memory. Figure \ref{fig:vawtrak-timeline-idle} shows a timeline for an analysis of this group.
+
+
+\begin{figure}[h]
+    \includegraphics[width=8cm,scale=0.5]{vawtrak/vawtrak-timelines-eps/Vawtrak-53f02888d109104fff48c1cb64e26961158562d90bf46a1886721b0ca7eb594c.eps}
+    \caption{A Vawtrak timeline showing the average of in-memory configuration data for an analysis in the 'Expected' group}
+    \label{fig:vawtrak-timeline-normal}
+\end{figure}
+\begin{figure}[h]
+    \includegraphics[width=8cm,scale=0.5]{vawtrak/vawtrak-timelines-eps/Vawtrak-4363ff0c55c529130293076e1064050cf4e2e18e11b1ab2aec0465089ca322b6.eps}
+    \caption{A Vawtrak timeline showing the average of in-memory configuration data for an analysis the 'Brief' group}
+    \label{fig:vawtrak-timeline-brief}
+\end{figure}
+\begin{figure}[!h]
+    \includegraphics[width=8cm,scale=0.5]{vawtrak/vawtrak-timelines-eps/Vawtrak-5df8692ddbb8466e37497089c021cb5f3880a0a0e0d77a52a4705ea126775a3e.eps}
+    \caption{A Vawtrak timeline showing the average of in-memory configuration data for an analysis in the 'Other process injection' group}
+    \label{fig:vawtrak-timeline-injection}
+\end{figure}
+\begin{figure}[!h]
+    \includegraphics[width=8cm,scale=0.5]{vawtrak/vawtrak-timelines-eps/Vawtrak-2463ceddfe505ec3320f728ac3b7b47002f4fb93dbd047e73de013af9876a80e.eps}
+    \caption{A timeline showing the average of in-memory configuration data for the 'Idle' group}
+    \label{fig:vawtrak-timeline-idle}
+\end{figure}
 
 
 
