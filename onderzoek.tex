@@ -1,6 +1,6 @@
 \documentclass[conference]{IEEEtran}
 \usepackage{pdfpages, etoolbox, afterpage, graphicx, adjustbox}
-\graphicspath{{images/}}
+
 
 
 \newcommand\blankpage{%
@@ -206,7 +206,7 @@ The analysis of the Zeus family resulted in data for 104 out of 115 used malware
 
 \begin{figure}[!h]
 	\hspace{-3cm}
-    \includegraphics[width=13cm,trim=-70mm 0mm 0mm 9mm, clip=true]{zeus/Zeus-barchart.eps}
+    \includegraphics[width=13cm,trim=-70mm 0mm 0mm 9mm, clip=true]{images/zeus/Zeus-barchart.eps}
     \caption{A chart showing the combined timelines of presence of configuration data during the analysis of all Zeus samples}
     \label{fig:zeus-bar}
 \end{figure}
@@ -227,23 +227,23 @@ The analysis of the Zeus family resulted in data for 104 out of 115 used malware
 
 
 \begin{figure}[h]
-    \includegraphics[width=8cm,scale=0.5]{zeus/zeus-timelines-eps/Zeus-bcf97e3d33adf99bcbbe564b0a7fb4444b6b5eba3ebeaf35af47d840cf2b53ab.eps}
+    \includegraphics[width=8cm,scale=0.5]{images/zeus/zeus-timelines-eps/Zeus-bcf97e3d33adf99bcbbe564b0a7fb4444b6b5eba3ebeaf35af47d840cf2b53ab.eps}
     \caption{A Zeus timeline showing the average of in-memory configuration data for an analysis in the 'Expected' group}
     \label{fig:zeus-timeline-normal}
 \end{figure}
 \begin{figure}[h]
-    \includegraphics[width=8cm,scale=0.5]{zeus/zeus-timelines-eps/Zeus-9e2f9b904100dff4167de7b171c6f595cf8cfccb2fbfc6a13f90aeb970d41574.eps}
+    \includegraphics[width=8cm,scale=0.5]{images/zeus/zeus-timelines-eps/Zeus-9e2f9b904100dff4167de7b171c6f595cf8cfccb2fbfc6a13f90aeb970d41574.eps}
     \caption{A Zeus timeline showing the average of in-memory configuration data for an analysis the 'Expected' group, but with a delay in execution at the start}
     \label{fig:zeus-timeline-normal-delay}
 \end{figure}
 \begin{figure}[h]
-    \includegraphics[width=8cm,scale=0.5]{zeus/zeus-timelines-eps/Zeus-db41194de27c68e8fd10bdbc107bae5c91fb8ebf340802c3844aed7d733a9674.eps}
+    \includegraphics[width=8cm,scale=0.5]{images/zeus/zeus-timelines-eps/Zeus-db41194de27c68e8fd10bdbc107bae5c91fb8ebf340802c3844aed7d733a9674.eps}
     \caption{A Zeus timeline showing the average of in-memory configuration data for an analysis in the
     'Explorer.exe injection' group}
     \label{fig:zeus-timeline-injection}
 \end{figure}
 \begin{figure}[!h]
-    \includegraphics[width=8cm,scale=0.5]{zeus/zeus-timelines-eps/Zeus-e385729e2bf3e10aac9bf0a5cbe96cb84643b0c378a744e1e7216ddf4d485fac.eps}
+    \includegraphics[width=8cm,scale=0.5]{images/zeus/zeus-timelines-eps/Zeus-e385729e2bf3e10aac9bf0a5cbe96cb84643b0c378a744e1e7216ddf4d485fac.eps}
     \caption{A Zeus timeline showing the average of in-memory configuration data for the 'Idle or failed' group}
     \label{fig:zeus-timeline-idle}
 \end{figure}
@@ -256,7 +256,7 @@ The analysis of the Vawtrak family resulted in data for 107 out of 115 used malw
 
 \begin{figure}[h]
 	\hspace{-3cm}
-    \includegraphics[width=13cm,trim=-70mm 0mm 0mm 9mm, clip=true]{vawtrak/Vawtrak-barchart.eps}
+    \includegraphics[width=13cm,trim=-70mm 0mm 0mm 9mm, clip=true]{images/vawtrak/Vawtrak-barchart.eps}
     \caption{A chart showing the combined timelines of presence of configuration data during the analysis of all Vawtrak samples}
     \label{fig:vawtrak-bar}
 \end{figure}
@@ -275,27 +275,78 @@ The analysis of the Vawtrak family resulted in data for 107 out of 115 used malw
 
 \textbf{Idle}
 \\Analyses in this group do not have any configuration data in the memory at any point during the analysis. The started process delays the analysis by sleeping immediately after  being executed. These sleeps last for one to three minutes, after which it injects itself into another processy acquiring a process handle and writing to its memory. Figure \ref{fig:vawtrak-timeline-idle} shows a timeline for an analysis of this group.
-
+\newpage
 
 \begin{figure}[h]
-    \includegraphics[width=8cm,scale=0.5]{vawtrak/vawtrak-timelines-eps/Vawtrak-53f02888d109104fff48c1cb64e26961158562d90bf46a1886721b0ca7eb594c.eps}
+    \includegraphics[width=8cm,scale=0.5]{images/vawtrak/vawtrak-timelines-eps/Vawtrak-53f02888d109104fff48c1cb64e26961158562d90bf46a1886721b0ca7eb594c.eps}
     \caption{A Vawtrak timeline showing the average of in-memory configuration data for an analysis in the 'Expected' group}
     \label{fig:vawtrak-timeline-normal}
 \end{figure}
 \begin{figure}[h]
-    \includegraphics[width=8cm,scale=0.5]{vawtrak/vawtrak-timelines-eps/Vawtrak-4363ff0c55c529130293076e1064050cf4e2e18e11b1ab2aec0465089ca322b6.eps}
+    \includegraphics[width=8cm,scale=0.5]{images/vawtrak/vawtrak-timelines-eps/Vawtrak-4363ff0c55c529130293076e1064050cf4e2e18e11b1ab2aec0465089ca322b6.eps}
     \caption{A Vawtrak timeline showing the average of in-memory configuration data for an analysis the 'Brief' group}
     \label{fig:vawtrak-timeline-brief}
 \end{figure}
 \begin{figure}[!h]
-    \includegraphics[width=8cm,scale=0.5]{vawtrak/vawtrak-timelines-eps/Vawtrak-5df8692ddbb8466e37497089c021cb5f3880a0a0e0d77a52a4705ea126775a3e.eps}
+    \includegraphics[width=8cm,scale=0.5]{images/vawtrak/vawtrak-timelines-eps/Vawtrak-5df8692ddbb8466e37497089c021cb5f3880a0a0e0d77a52a4705ea126775a3e.eps}
     \caption{A Vawtrak timeline showing the average of in-memory configuration data for an analysis in the 'Other process injection' group}
     \label{fig:vawtrak-timeline-injection}
 \end{figure}
 \begin{figure}[!h]
-    \includegraphics[width=8cm,scale=0.5]{vawtrak/vawtrak-timelines-eps/Vawtrak-2463ceddfe505ec3320f728ac3b7b47002f4fb93dbd047e73de013af9876a80e.eps}
-    \caption{A timeline showing the average of in-memory configuration data for the 'Idle' group}
+    \includegraphics[width=8cm,scale=0.5]{images/vawtrak/vawtrak-timelines-eps/Vawtrak-2463ceddfe505ec3320f728ac3b7b47002f4fb93dbd047e73de013af9876a80e.eps}
+    \caption{A Vawtrak timeline showing the average of in-memory configuration data for the 'Idle' group}
     \label{fig:vawtrak-timeline-idle}
+\end{figure}
+
+
+\subsection{Results Locky}
+The analysis of the Locky family resulted in data for 114 out of 115 used malware samples. one of the samples crashed upon execution. This sample is not part of any timelines or charts discussed in this subsection. Figure \ref{fig:locky-bar} shows the presence of configuration data for all measured Locky analyses. This chart was created by combining the timelines for all Locky analyses. All seperate timelines can be found at \footnote{https://oege.ie.hva.nl/\textasciitilde{}zutpher003/research2016/locky/}.\\
+
+
+
+\begin{figure}[h]
+	\hspace{-3cm}
+    \includegraphics[width=13cm,trim=-70mm 0mm 0mm 9mm, clip=true]{images/locky/Locky-barchart.eps}
+    \caption{A chart showing the combined timelines of presence of configuration data during the analysis of all Locky samples}
+    \label{fig:locky-bar}
+\end{figure}
+
+
+\textbf{Expected Locky behavior}
+\\Analyses in this group display the 'expected' Locky behavior \cite{nelson-locky}: The first process of the Locky malware starts with trying to communicate with the C2. After this moment there are two types of behaviour in the analyses. The case where the C2 responds, Locky will now start encrypting files on the computer and after the encryption a second process is started which deletes all Windows shadow copies. The last step performed is creating a notification to inform the user that their files have been encrypted.\\
+
+The second type of behaviour is where the C2 does not respond. In this case, the process will try to contact the other C2s in memory, and if these do not respond, the process will terminate. For both these cases the configuration data is in-memory from start of the analysis until the first process terminates.\\
+
+The timelines for this group of analyses show that the configuration data is present in the memory for 10 to 290 seconds after the analysis has started.\\
+
+Figure \ref{fig:locky-timeline-expected} shows a timeline for an analysis of this group.\\
+
+\textbf{Continuous communication }\\
+Analyses in this group immediately start to communicate with their C2, which is not responding, and continue to do so until the end of the analysis. The configuration data is present in the memory during the entire length of the analysis. This corresponds with one of the analyzed Locky samples in\cite{nelson-locky}.
+
+Figure \ref{fig:locky-timeline-continuous} shows a timeline for an analysis of this group.\\
+ 
+\textbf{Idle}\\
+Analyses in this group start to delay the execution after being started by making the process sleep. The memory does not contain any configuration data during the length of these analyses.
+
+Figure \ref{fig:locky-timeline-idle} shows a timeline for an analysis of this group.\\
+
+
+
+\begin{figure}[h]
+    \includegraphics[width=8cm,scale=0.5]{images/locky/locky-timelines-eps/Locky-facfeca271ff2aacf78e97442d1ec77151e704f4801bb06eb7c5d03366db636c.eps}
+    \caption{A Locky timeline showing the average of in-memory configuration data for an analysis the 'Expected' group}
+    \label{fig:locky-timeline-expected}
+\end{figure}
+\begin{figure}[!h]
+    \includegraphics[width=8cm,scale=0.5]{images/locky/locky-timelines-eps/Locky-e1d30133c2d6e773c5ee438ca35d7b66e68b71388df43d7015758f68bd414d8f.eps}
+    \caption{A Locky timeline showing the average of in-memory configuration data for an analysis in the 'Continuous communication' group}
+    \label{fig:locky-timeline-continuous}
+\end{figure}
+\begin{figure}[!h]
+    \includegraphics[width=8cm,scale=0.5]{images/locky/locky-timelines-eps/Locky-431722a7b262373ee3b3e18bb476e7f04c2ecb4387c8437e7bbe52ff9974d707.eps}
+    \caption{A Locky timeline showing the average of in-memory configuration data for the 'Idle' group}
+    \label{fig:locky-timeline-idle}
 \end{figure}
 
 
