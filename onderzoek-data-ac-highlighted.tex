@@ -1,5 +1,5 @@
 \documentclass[conference]{IEEEtran}
-\usepackage{pdfpages, etoolbox, afterpage, graphicx, adjustbox}
+\usepackage{pdfpages, etoolbox, afterpage, graphicx, adjustbox, soul}
 
 
 
@@ -161,7 +161,7 @@ The measured results will be presented in a visual form by the use of charts and
 
 \section{Data Acquisition}
 
-The collected dataset consists of 460 malware samples. The malware families included in this set are Zeus and Vawtrak, which is banking malware, and the families Locky and TeslaCrypt, which are ransomware.  The samples were collected  by first searching for file hashes, which can be used to uniquely identify a file,  and then collecting the corresponding malware samples with the help of an external expert malware researcher. The researcher used his privileges with the online malware analysis platform VirusTotal, to obtain the malware samples. The platforms 'Zeustracker', 'SSL Blacklist', and 'Ransomwaretracker' were used to collect hashes for Zeus, Vawtrak, Locky, and Teslacrypt. These platforms are all part of 'abuse.ch', a platform were malware C2s. binary hashes, and configurations are collected \footnote{https://zeustracker.abuse.ch/faq.php}. All collected file hashes are listed in appendix A.
+\hl{The collected dataset consists of 460 malware samples. The malware families included in this set are Zeus and Vawtrak, which is banking malware, and the families Locky and TeslaCrypt, which are ransomware.  The samples were collected  by first searching for file hashes, which can be used to uniquely identify a file,  and then collecting the corresponding malware samples with the help of an external expert malware researcher. The researcher used his privileges with the online malware analysis platform VirusTotal, to obtain the malware samples. The platforms 'Zeustracker', 'SSL Blacklist', and 'Ransomwaretracker' were used to collect hashes for Zeus, Vawtrak, Locky, and Teslacrypt. These platforms are all part of 'abuse.ch', a platform were malware C2s. binary hashes, and configurations are collected \footnote{https://zeustracker.abuse.ch/faq.php}. All collected file hashes are listed in appendix A.}
 
 \subsection{Attributes}	
 This section contains information about each malware family and the collected samples for this family. It lists the amount of samples to be used, the file types in the dataset, and the entropy score for each file. A malware binary can be packed or encrypted in order to hide its code, any configuration data, and any other strings. These are the samples we want to use because they likely contain some form of configuration data. \\\\Compressed and encrypted binaries have a high entropy, this entropy can be measured in the form of Shannon Entropy \cite{hamrock-entropy}. The result of this measurement is a floating point number. Using this number and the table mentioned in \cite{hamrock-entropy}, which contains statistical measures based on different types of data, we can determine if a sample is most likely a native, packed or an encrypted executable.
@@ -206,7 +206,7 @@ The analysis of the Zeus family resulted in data for 104 out of 115 used malware
 
 \begin{figure}[!h]
 	\hspace{-3cm}
-    \includegraphics[width=13cm,trim=-95mm 0mm 0mm 9mm, clip=true]{images/zeus/Zeus-barchart.eps}
+    \includegraphics[width=13cm,trim=-70mm 0mm 0mm 9mm, clip=true]{images/zeus/Zeus-barchart.eps}
     \caption{A chart showing the combined timelines of presence of configuration data during the analysis of all Zeus samples}
     \label{fig:zeus-bar}
 \end{figure}
