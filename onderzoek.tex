@@ -349,7 +349,31 @@ Figure \ref{fig:locky-timeline-idle} shows a timeline for an analysis of this gr
 
 
 \subsection{Results Teslacrypt}
-The analysis of the Teslacrypt family resulted in data for 111 out of 115 used malware samples, four of the samples crashed upon execution. These samples are not part of any timelines or charts discussed in this subsection. Figure X shows the presence of configuration data for all measured Teslacrypt analyses. This chart was created by combining the timelines for all Teslacrypt analyses. All seperate timelines can be found at. X
+The analysis of the Teslacrypt family resulted in data for 111 out of 115 used malware samples, four of the samples crashed upon execution. These samples are not part of any timelines or charts discussed in this subsection. Figure \ref{fig:teslacrypt-bar} shows the presence of configuration data for all measured Teslacrypt analyses. This chart was created by combining the timelines for all Teslacrypt analyses. All seperate timelines can be found at \footnote{\url{https://oege.ie.hva.nl/~zutpher003/research2016/teslacrypt/}}.
+
+
+\begin{figure}[h]
+	\hspace{-3cm}
+    \includegraphics[width=13cm,trim=-70mm 0mm 0mm 9mm, clip=true]{images/teslacrypt/teslacrypt-barchart.eps}
+    \caption{A chart showing the combined timelines of presence of configuration data during the analysis of all Teslacrypt samples}
+    \label{fig:teslacrypt-bar}
+\end{figure}
+
+\textbf{Expected Teslacrypt behavior}\\
+Analyses is this group display the 'expected' Teslacrypt behavior \cite{wyke-currans} and can be split into two types. The first type displays the following behavior. After execution, the first process starts by copying its binary and creating a process using this binary, which will be the actual malicious process. It differs per analysis how many times this copying occurs until the malicious binary is started, it happens one to four times. After the malicious process has started, the first binary is removed by starting a Windows command prompt and executing a delete command. The next step performed is the encryption of a user's files. When the encryption has finished, the malicious process attempts to communicate with its C2 and after this step create files which inform the user that their files have been encrypted.\\
+\\The second group displays the similar behavior, but with the difference of first delaying execution by constantly reading the same registry key before starting the malicious process. This does result in two different timelines. With the first type, configuration data can be found almost the entire execution of the malware. With the second type only after it is done delaying execution, which takes an average of 60 seconds. A timeline for the first type can be seen at figure \ref{fig:teslacrypt-expected} and a timeline for the second type can be seen at figure \ref{fig:teslacrypt-expected-delay}.
+
+
+\begin{figure}[!h]
+    \includegraphics[width=8cm,scale=0.5]{images/teslacrypt/teslacrypt-timelines-eps/Teslacrypt-1df9b5ddb6e6e6bf2645baf7e0d60a64a42367ae1fc1994e728cfc96d0342ffe.eps}
+    \caption{A Teslacrypt timeline showing the average of in-memory configuration data for an analysis in the 'Expected behavior' group}
+    \label{fig:teslacrypt-expected}
+\end{figure}
+\begin{figure}[!h]
+    \includegraphics[width=8cm,scale=0.5]{images/teslacrypt/teslacrypt-timelines-eps/Teslacrypt-6bd43369f76695e3770ad594ec5728e0c9a45cc92e93c4fa8337694cc724f332.eps}
+    \caption{A Teslacrypt timeline showing the average of in-memory configuration data for an analysis in the 'Expected behavior with execution delay' group}
+    \label{fig:teslacrypt-expected-delay}
+\end{figure}
 
 
 % trigger a \newpage just before the given reference
