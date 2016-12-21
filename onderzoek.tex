@@ -1,6 +1,6 @@
 \documentclass[conference]{IEEEtran}
 \usepackage{pdfpages, etoolbox, afterpage, graphicx, adjustbox}
-
+\usepackage[hidelinks]{hyperref}
 
 
 \newcommand\blankpage{%
@@ -161,22 +161,22 @@ The measured results will be presented in a visual form by the use of charts and
 
 \section{Data Acquisition}
 
-The collected dataset consists of 460 malware samples. The malware families included in this set are Zeus and Vawtrak, which is banking malware, and the families Locky and TeslaCrypt, which are ransomware.  The samples were collected  by first searching for file hashes, which can be used to uniquely identify a file,  and then collecting the corresponding malware samples with the help of an external expert malware researcher. The researcher used his privileges with the online malware analysis platform VirusTotal, to obtain the malware samples. The platforms 'Zeustracker', 'SSL Blacklist', and 'Ransomwaretracker' were used to collect hashes for Zeus, Vawtrak, Locky, and Teslacrypt. These platforms are all part of 'abuse.ch', a platform were malware C2s. binary hashes, and configurations are collected \footnote{https://zeustracker.abuse.ch/faq.php}. All collected file hashes are listed in appendix A.
+The collected dataset consists of 460 malware samples. The malware families included in this set are Zeus and Vawtrak, which is banking malware, and the families Locky and TeslaCrypt, which are ransomware.  The samples were collected  by first searching for file hashes, which can be used to uniquely identify a file,  and then collecting the corresponding malware samples with the help of an external expert malware researcher. The researcher used his privileges with the online malware analysis platform VirusTotal, to obtain the malware samples. The platforms 'Zeustracker', 'SSL Blacklist', and 'Ransomwaretracker' were used to collect hashes for Zeus, Vawtrak, Locky, and Teslacrypt. These platforms are all part of 'abuse.ch', a platform were malware C2s. binary hashes, and configurations are collected \footnote{\url{https://zeustracker.abuse.ch/faq.php}}. All collected file hashes are listed in appendix A.
 
 \subsection{Attributes}	
 This section contains information about each malware family and the collected samples for this family. It lists the amount of samples to be used, the file types in the dataset, and the entropy score for each file. A malware binary can be packed or encrypted in order to hide its code, any configuration data, and any other strings. These are the samples we want to use because they likely contain some form of configuration data. \\\\Compressed and encrypted binaries have a high entropy, this entropy can be measured in the form of Shannon Entropy \cite{hamrock-entropy}. The result of this measurement is a floating point number. Using this number and the table mentioned in \cite{hamrock-entropy}, which contains statistical measures based on different types of data, we can determine if a sample is most likely a native, packed or an encrypted executable.
 \\\\
 
 \textbf{Zeus}\\
-The hashes for the Zeus samples were collected from 'Zeustracker'\footnote{https://zeustracker.abuse.ch} and also given to us by the external malware researcher. \\\\The set for this family contains 115 samples, each of these files is either a PE32 or an MS-DOS executable. Zeus is a banking malware family. During execution it will still need to download its configuration file. The URL of the location of this configuration file will be in memory during the execution of samples of this set \cite{wyke-zeus}. The Shannon Entropy score for each sample in the set is 6.578 or higher, the average is 6.936. this indicates that the samples are most likely packed executables \cite{hamrock-entropy}.\\
+The hashes for the Zeus samples were collected from 'Zeustracker'\footnote{\url{https://zeustracker.abuse.ch}} and also given to us by the external malware researcher. \\\\The set for this family contains 115 samples, each of these files is either a PE32 or an MS-DOS executable. Zeus is a banking malware family. During execution it will still need to download its configuration file. The URL of the location of this configuration file will be in memory during the execution of samples of this set \cite{wyke-zeus}. The Shannon Entropy score for each sample in the set is 6.578 or higher, the average is 6.936. this indicates that the samples are most likely packed executables \cite{hamrock-entropy}.\\
 
 \textbf{Vawtrak}\\
-The hashes for the Vawtrak samples were collected from \cite{sahin-vawtrak} and from 'SSL Blacklist'\footnote{https://sslbl.abuse.ch/}
+The hashes for the Vawtrak samples were collected from \cite{sahin-vawtrak} and from 'SSL Blacklist'\footnote{\url{https://sslbl.abuse.ch/}}
 \\\\The set for this family contains 115 samples, each of these files is a PE32 executable. Vawtrak is a banking malware family. The binaries in this set do not have to download all their configuration data, part of it is already embedded in the file in the form of  multiple URLS \cite{kroustek-vawtrak}. The Shannon Entropy score for each sample in the set is 6.413 or higher, the average is 7.039. this score lies in between the score of packed and encrypted executables, meaning it could be either \cite{hamrock-entropy}.\\
 
 
 \textbf{Locky}\\
-The hashes for the Locky samples were collected from 'Ransomwaretracker'\footnote{https://ransomwaretracker.abuse.ch/}  and given to us by the external malware researcher.\\\\The set for this family contains 115 samples, each of these files is a PE32 executable. Locky is a ransomware family. The binaries in this set do not have to download all their configuration data, part of it is already embedded in the file in the form of  multiple URLS \cite{nelson-locky}. The Shannon Entropy score for each sample in this set is 6.367 or higher, the average is 6.999. This score lies in between the score of packed and encrypted executables, meaning it could be either \cite{hamrock-entropy}.\\
+The hashes for the Locky samples were collected from 'Ransomwaretracker'\footnote{\url{https://ransomwaretracker.abuse.ch/}}  and given to us by the external malware researcher.\\\\The set for this family contains 115 samples, each of these files is a PE32 executable. Locky is a ransomware family. The binaries in this set do not have to download all their configuration data, part of it is already embedded in the file in the form of  multiple URLS \cite{nelson-locky}. The Shannon Entropy score for each sample in this set is 6.367 or higher, the average is 6.999. This score lies in between the score of packed and encrypted executables, meaning it could be either \cite{hamrock-entropy}.\\
 
 \textbf{TeslaCrypt}\\
 The hashes for the TeslaCrypt were collected from 'Ransomwaretracker' and given to us by the external malware researcher. \\\\The set for this family contains 115 samples, each of these files is a PE32 executable. TeslaCrypt is a ransomware family. The binaries in this set do not have to download all their configuration data, part of it is already embedded in the file in the form of  multiple URLS \cite{wyke-currans}. The Shannon Entropy score for each sample in this set is 6.068 or higher, the average is 6.777. this indicates that the samples are most likely packed executables, but could also be native executables containing compressed or encrypted sections \cite{hamrock-entropy}.
@@ -202,7 +202,7 @@ This section contains the per-family results of the measurement performed proces
 
 
 \subsection{Results Zeus}
-The analysis of the Zeus family resulted in data for 104 out of 115 used malware samples. 11 of the samples crashed upon execution. These samples are not part of any timelines or charts discussed in this subsection. Figure \ref{fig:zeus-bar} shows the presence of configuration data for all measured Zeus analyses. This chart was created by combining the timelines for all Zeus analyses. All seperate timelines can be found at \footnote{https://oege.ie.hva.nl/\textasciitilde{}zutpher003/research2016/zeus/}.\\
+The analysis of the Zeus family resulted in data for 104 out of 115 used malware samples. 11 of the samples crashed upon execution. These samples are not part of any timelines or charts discussed in this subsection. Figure \ref{fig:zeus-bar} shows the presence of configuration data for all measured Zeus analyses. This chart was created by combining the timelines for all Zeus analyses. All seperate timelines can be found at \footnote{\url{https://oege.ie.hva.nl/~zutpher003/research2016/zeus/}}.\\
 
 \begin{figure}[!h]
 	\hspace{-3cm}
@@ -251,7 +251,7 @@ The analysis of the Zeus family resulted in data for 104 out of 115 used malware
 \newpage
 
 \subsection{Results Vawtrak}
-The analysis of the Vawtrak family resulted in data for 107 out of 115 used malware samples. 8 of the samples crashed upon execution. These samples are not part of any timelines or charts discussed in this subsection. Figure \ref{fig:vawtrak-bar} shows the presence of configuration data for all measures Vawtrak analyses. This chart was created by combining the timelines for all Vawtrak analyses. All seperate timelines can be found at \footnote{https://oege.ie.hva.nl/\textasciitilde{}zutpher003/research2016/vawtrak/}.
+The analysis of the Vawtrak family resulted in data for 107 out of 115 used malware samples. 8 of the samples crashed upon execution. These samples are not part of any timelines or charts discussed in this subsection. Figure \ref{fig:vawtrak-bar} shows the presence of configuration data for all measures Vawtrak analyses. This chart was created by combining the timelines for all Vawtrak analyses. All seperate timelines can be found at \footnote{\url{https://oege.ie.hva.nl/~zutpher003/research2016/vawtrak/}}.
 
 
 \begin{figure}[h]
@@ -298,12 +298,6 @@ The analysis of the Vawtrak family resulted in data for 107 out of 115 used malw
     \label{fig:vawtrak-timeline-idle}
 \end{figure}
 
-
-\subsection{Results Locky}
-The analysis of the Locky family resulted in data for 114 out of 115 used malware samples. one of the samples crashed upon execution. This sample is not part of any timelines or charts discussed in this subsection. Figure \ref{fig:locky-bar} shows the presence of configuration data for all measured Locky analyses. This chart was created by combining the timelines for all Locky analyses. All seperate timelines can be found at \footnote{https://oege.ie.hva.nl/\textasciitilde{}zutpher003/research2016/locky/}.\\
-
-
-
 \begin{figure}[h]
 	\hspace{-3cm}
     \includegraphics[width=13cm,trim=-70mm 0mm 0mm 9mm, clip=true]{images/locky/Locky-barchart.eps}
@@ -332,7 +326,6 @@ Analyses in this group start to delay the execution after being started by makin
 Figure \ref{fig:locky-timeline-idle} shows a timeline for an analysis of this group.\\
 
 
-
 \begin{figure}[h]
     \includegraphics[width=8cm,scale=0.5]{images/locky/locky-timelines-eps/Locky-facfeca271ff2aacf78e97442d1ec77151e704f4801bb06eb7c5d03366db636c.eps}
     \caption{A Locky timeline showing the average of in-memory configuration data for an analysis the 'Expected' group}
@@ -349,6 +342,9 @@ Figure \ref{fig:locky-timeline-idle} shows a timeline for an analysis of this gr
     \label{fig:locky-timeline-idle}
 \end{figure}
 
+
+\subsection{Results Teslacrypt}
+The analysis of the Teslacrypt family resulted in data for 111 out of 115 used malware samples, four of the samples crashed upon execution. These samples are not part of any timelines or charts discussed in this subsection. Figure X shows the presence of configuration data for all measured Teslacrypt analyses. This chart was created by combining the timelines for all Teslacrypt analyses. All seperate timelines can be found at. X
 
 
 % trigger a \newpage just before the given reference
