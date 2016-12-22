@@ -2,11 +2,13 @@
 \usepackage{pdfpages, etoolbox, afterpage, graphicx, adjustbox, soul}
 \usepackage[hidelinks]{hyperref}
 
+\pagenumbering{arabic}
+\setcounter{page}{1}
 
 \newcommand\blankpage{%
     \null
-    \thispagestyle{empty}%
-    \addtocounter{page}{-1}%
+    \thispagestyle{plain}%
+    \addtocounter{page}{0}%
     \newpage}
 
 % *** GRAPHICS RELATED PACKAGES ***
@@ -53,7 +55,8 @@ Email: Ricardo.van.Zutphen@hva.nl}}
 
 % make the title area
 \maketitle
-
+\thispagestyle{plain}
+\pagestyle{plain}
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
 %\begin{abstract}
@@ -380,19 +383,19 @@ Figure \ref{fig:locky-timeline-idle} shows a timeline for an analysis of this gr
 \hl{This subsection explains why some behavior was found. Mind that these are only hypotheses. Further research in these malware samples is needed to draw a proper conclusion about why this behavior occurs. Only behavior not following the expected behavior, which is described in the paper that is referenced in each malware group's 'Expected behavior' description, is included in this subsection.\\
 
 \textbf{Delaying execution (sleeping)}\\
-At least one group of all analysed malware families shows behavior that delays the execution. This was observed in two different forms: using the actual 'NtDelayExecution' or an equivalent Windows API call and using the same or a series of the same Windows API call which ends up delaying the execution because it is used hundreds of times in a row. \\A possible reason for observing these two types is that malware authors are aware of a simple 'NtDelayExecution' call easily being recognized and countered by an automated malware analysis system. An example of this would be opening, reading and closing the same registry key over and over. \\\\It is likely that this action is performed as a form of automated dynamic malware analysis evasion or sandbox evasion. Usually, an automated analysis only runs for several minutes in which it collects all kinds of data. If no data that indicates malicious actions is collected, a malware sample might be labeled as non-malicious. Delaying the execution can be a means to reach this goal {\cite{keragala-evasion}}.\\
+At least one group of all analysed malware families shows behavior that delays the execution. This was observed in two different forms: using the actual 'NtDelayExecution' or an equivalent Windows API call and using the same or a series of the same Windows API call which ends up delaying the execution because it is used hundreds of times in a row. \\A possible reason for observing these two types is that malware authors are aware of a simple 'NtDelayExecution' call easily being recognized and countered by an automated malware analysis system. An example of this would be opening, reading and closing the same registry key over and over. \\\\It is likely that this action is performed as a form of automated dynamic malware analysis evasion or sandbox evasion. Usually, an automated analysis only runs for several minutes in which it collects all kinds of data. If no data that indicates malicious actions is collected, a malware sample might be labeled as non-malicious. Delaying the execution can be a means to reach this goal {\cite{keragala-evasion}}.}\\
 
-\textbf{Variation in the amount of binaries unpacked/copied}\\
-All analysed malware families start by copying their own or unpacking a new binary to another location and starting it as the first action after execution. This copying and executing is likely done to make it harder to detect and remove the malware. The original binary is often removed after the second process has started. The amount of copying and execution actions differs per malware and also within a malware family. A possible reason for this is that the dataset used for this research contains multiple versions of a certain malware family.\\
+\hl{\textbf{Variation in the amount of binaries unpacked/copied}\\
+All analysed malware families start by copying their own or unpacking a new binary to another location and starting it as the first action after execution. This copying and executing is likely done to make it harder to detect and remove the malware. The original binary is often removed after the second process has started. The amount of copying and execution actions differs per malware and also within a malware family. A possible reason for this is that the dataset used for this research contains multiple versions of a certain malware family.\\}
 
-\textbf{No action, idle or brief behavior}\\
+\hl{\textbf{No action, idle or brief behavior}\\
 Nearly all analysed families have an 'Idle' group. This group contains analyses which either did perform any expected actions or delayed execution during the entire analysis. Multiple explanations for this behavior exist. Some malware is configured specifically for a target or a group of targets. An example being: Windows 7 users with an English system language. It is possible that the 'idle' samples were configured for a target and that the analysis virtual machine did not meet the requirements to be in that target group.\\\\
-A second reason for 'idle' behavior can be that the malware detects that it is being executed inside a sandbox, and Cuckoo Sandbox does not mitigate the method this malware uses to detect it. The malware might do this by looking for known names for virtual devices like network interfaces, hard drives and others. Other ways of detecting a sandbox are possible {\cite{keragala-evasion}}.\\
+A second reason for 'idle' behavior can be that the malware detects that it is being executed inside a sandbox, and Cuckoo Sandbox does not mitigate the method this malware uses to detect it. The malware might do this by looking for known names for virtual devices like network interfaces, hard drives and others. Other ways of detecting a sandbox are possible {\cite{keragala-evasion}}.}\\
 
-\textbf{Process/DLL injection}\\
-Both banking malware families display the use of process/DLL injection. Specifically the type 'remote thread injection'. The malicious process opens a process handle which it uses to write a path of a malicious DLL to the process handle's memory. The malicious process then starts a remote thread using the 'CreateRemoteThread' API call which then loads the malicious DLL. This action is usually performed using a legitimate Windows process like Explorer.exe  {\cite{alasiri-dll-injection}}.\\\\There are multiple likely reasons a malware author chose to use this. The first reason is that it allows for the first process to exit and the malware to run under a legitimate Windows process name. The second reason is that a legitimate process is likely to keep running as long as the operating system is running. A third reason is that this allows for the malware to only exist in the system memory and not on disk, which makes it harder to detect.\\
+\hl{\textbf{Process/DLL injection}\\
+Both banking malware families display the use of process/DLL injection. Specifically the type 'remote thread injection'. The malicious process opens a process handle which it uses to write a path of a malicious DLL to the process handle's memory. The malicious process then starts a remote thread using the 'CreateRemoteThread' API call which then loads the malicious DLL. This action is usually performed using a legitimate Windows process like Explorer.exe  {\cite{alasiri-dll-injection}}.\\\\There are multiple likely reasons a malware author chose to use this. The first reason is that it allows for the first process to exit and the malware to run under a legitimate Windows process name. The second reason is that a legitimate process is likely to keep running as long as the operating system is running. A third reason is that this allows for the malware to only exist in the system memory and not on disk, which makes it harder to detect.}\\
 
-\textbf{Crashed}\\
+\hl{\textbf{Crashed}\\
 Some of the malware families also contain a 'Failed or crashed' group. The malware process in the analyses of this group have crashed. There are several reasons for this, of which two were often observed. The first is trying to access a part of the memory to which the malware process does not have access and it being killed as a result. The second reason observed is the importing of non-existing DLLs, which can also result in a crash.}
 
 % trigger a \newpage just before the given reference

@@ -2,11 +2,13 @@
 \usepackage{pdfpages, etoolbox, afterpage, graphicx, adjustbox}
 \usepackage[hidelinks]{hyperref}
 
+\pagenumbering{arabic}
+\setcounter{page}{1}
 
 \newcommand\blankpage{%
     \null
-    \thispagestyle{empty}%
-    \addtocounter{page}{-1}%
+    \thispagestyle{plain}%
+    \addtocounter{page}{0}%
     \newpage}
 
 % *** GRAPHICS RELATED PACKAGES ***
@@ -35,6 +37,7 @@
 
 \begin{document}
 
+
 \title{Malware, when to extract configuration data from system memory}
 
 
@@ -53,7 +56,8 @@ Email: Ricardo.van.Zutphen@hva.nl}}
 
 % make the title area
 \maketitle
-
+\thispagestyle{plain}
+\pagestyle{plain}
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
 %\begin{abstract}
