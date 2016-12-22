@@ -198,7 +198,7 @@ Yara is used to be able to recognize the memory of the processes containing the 
 
 
 \section{Analysis results}
-This section contains the per-family results of the measurement performed process memory dumps created during Cuckoo Sandbox analyses with a length of 300 seconds. Two types of malware were used: Banking malware and Ransomware.  For these types the families Zeus, Vawtrak (Banking malware), Teslacrypt, and Locky (Ransomware) were used.\\\\ The analysis results a grouped into different types of behavior. For each of these groups a possible reason is given which explains why the results are what was measured. During the examination of the measured results, multiple types of behavior were found. These different types of behavior are the cause for the differences in the amount of in-memory configurations found at a certain time interval. The types of behavior are grouped together for each family. Each of these groups is briefly explained and a corresponding timeline for that group is shown. \\The behavior of groups that is not expected will also be briefly explained. Mind that these explanations are hypotheses, further research into the behavior is recommended to draw a proper conclusion about why this behavior occurs.
+This section contains the per-family results of the measurement performed process memory dumps created during Cuckoo Sandbox analyses with a length of 300 seconds. Two types of malware were used: Banking malware and Ransomware.  For these types the families Zeus, Vawtrak (Banking malware), Teslacrypt, and Locky (Ransomware) were used.\\\\ The analysis results a grouped into different types of behavior. For each of these groups a possible reason is given which explains why the results are what was measured. During the examination of the measured results, multiple types of behavior were found. These different types of behavior are the cause for the differences in the amount of in-memory configurations found at a certain time interval. The types of behavior are grouped together for each family. Each of these groups is briefly explained and a corresponding timeline for that group is shown. \\The behavior of groups that is not expected will also be briefly explained and can be found at the end of this chapter. Mind that these explanations are hypotheses, further research into the behavior is recommended to draw a proper conclusion about why this behavior occurs.
 
 
 \subsection{Results Zeus}
@@ -274,7 +274,7 @@ The analysis of the Vawtrak family resulted in data for 107 out of 115 used malw
 \\Analyses in this group start by delaying execution by sleeping for one to two minutes, during which the configuration data is not present in the memory. After the delay, the process starts unpacking a second binary from its own binary. At this time, the configuration data is present in the memory. When the process has finished unpacking the second binary, it configures Windows to start the binary at Windows startup. The last step taken is injecting itself into another process by acquiring a process handle and writing to its memory. The Windows process being injected seems to be different every analysis. Figure \ref{fig:vawtrak-timeline-injection} shows a timeline for an analysis of this group.\\
 
 \textbf{Idle}
-\\Analyses in this group do not have any configuration data in the memory at any point during the analysis. The started process delays the analysis by sleeping immediately after  being executed. These sleeps last for one to three minutes, after which it injects itself into another processy acquiring a process handle and writing to its memory. Figure \ref{fig:vawtrak-timeline-idle} shows a timeline for an analysis of this group.
+\\Analyses in this group do not have any configuration data in the memory at any point during the analysis. The started process delays the analysis by sleeping immediately after  being executed. These sleeps last for one to three minutes, after which it injects itself into another process by acquiring a process handle and writing to its memory. Figure \ref{fig:vawtrak-timeline-idle} shows a timeline for an analysis of this group.
 \newpage
 
 \begin{figure}[h]
@@ -321,7 +321,7 @@ The timelines for this group of analyses show that the configuration data is pre
 Figure \ref{fig:locky-timeline-expected} shows a timeline for an analysis of this group.\\
 
 \textbf{Continuous communication }\\
-Analyses in this group immediately start to communicate with their C2, which is not responding, and continue to do so until the end of the analysis. The configuration data is present in the memory during the entire length of the analysis. This corresponds with one of the analyzed Locky samples in\cite{nelson-locky}.
+Analyses in this group immediately start to communicate with their C2, which is not responding, and continue to do so until the end of the analysis. The configuration data is present in the memory during the entire length of the analysis. This corresponds with the expected behavior of some of the analyzed Locky samples in \cite{nelson-locky}.
 
 Figure \ref{fig:locky-timeline-continuous} shows a timeline for an analysis of this group.\\
  
@@ -360,7 +360,7 @@ The analysis of the Teslacrypt family resulted in data for 111 out of 115 used m
 \end{figure}
 
 \textbf{Expected Teslacrypt behavior}\\
-Analyses is this group display the 'expected' Teslacrypt behavior \cite{wyke-currans} and can be split into two types. The first type displays the following behavior. After execution, the first process starts by copying its binary and creating a process using this binary, which will be the actual malicious process. It differs per analysis how many times this copying occurs until the malicious binary is started, it happens one to four times. After the malicious process has started, the first binary is removed by starting a Windows command prompt and executing a delete command. The next step performed is the encryption of a user's files. When the encryption has finished, the malicious process attempts to communicate with its C2 and after this step create files which inform the user that their files have been encrypted.\\
+Analyses in this group display the 'expected' Teslacrypt behavior \cite{wyke-currans} and can be split into two types. The first type displays the following behavior. After execution, the first process starts by copying its binary and creating a process using this binary, which will be the actual malicious process. It differs per analysis how many times this copying occurs until the malicious binary is started, it happens one to four times. After the malicious process has started, the first binary is removed by starting a Windows command prompt and executing a delete command. The next step performed is the encryption of the user's files. When the encryption has finished, the malicious process attempts to communicate with its C2 and after this step create files which inform the user that their files have been encrypted.\\
 \\The second group displays the similar behavior, but with the difference of first delaying execution by constantly reading the same registry key before starting the malicious process. This does result in two different timelines. With the first type, configuration data can be found almost the entire execution of the malware. With the second type only after it is done delaying execution, which takes an average of 60 seconds. A timeline for the first type can be seen at figure \ref{fig:teslacrypt-expected} and a timeline for the second type can be seen at figure \ref{fig:teslacrypt-expected-delay}.
 
 
@@ -375,6 +375,25 @@ Analyses is this group display the 'expected' Teslacrypt behavior \cite{wyke-cur
     \label{fig:teslacrypt-expected-delay}
 \end{figure}
 
+\newpage
+\subsection{Explanation of observed behavior}
+This subsection explains why some behavior was found. Mind that these are only hypotheses. Further research in these malware samples is needed to draw a proper conclusion about why this behavior occurs. Only behavior not following the expected behavior, which is described in the paper that is referenced in each malware group's 'Expected behavior' description, is included in this subsection.\\
+
+\textbf{Delaying execution (sleeping)}\\
+At least one group of all analysed malware families shows behavior that delays te execution. This was observed in two different forms: using the actual 'NtDelayExecution' or an equivalent Windows API call and using the same or a series of the same Windows API call which ends up delaying the execution because it is used hundreds of times in a row. \\A possible reason for observing these two types is that malware authors are aware of a simple 'NtDelayExectuion' call easily being recognized and countered by an automated malware analysis system. An example of this would be opening, reading and closing the same registry key over and over. \\\\It is likely that this action is performed as a form of automated dynamic malware analysis evasion or sandbox evasion. Usually, an automated analysis only runs for several minutes in which it collects all kinds of data. If no data that indicates malicious actions is collected, a malware sample might be labeled as non-malicious. Delaying the execution can be a means to reach this goal \cite{keragala-evasion}.\\
+
+\textbf{Variation in the amount of binaries unpacked/copied}\\
+All analysed malware families start by copying their own or unpacking a new binary to another location and starting it as the first action after execution. This copying and executing is likely done to make it harder to detect and remove the malware. The original binary is often removed after the second process has started. The amount copying and execution actions differs per malware and also within a malware family. A possible reason for this is that the dataset used for this research contains multiple versions of a certain malware family.\\
+
+\textbf{No action, idle or brief behavior}\\
+Nearly all analysed families have an 'Idle' group. This group contains analyses which either did perform any expected actions or delayed execution during the entire analysis. Multiple explanations for this behavior exist. Some malware is configured speficically for a target or a group of targets. An example being: Windows 7 users with an English system languange. It is possible that the 'idle' samples were configured for a target and that the analysis virtual machine did not meet the requirements to be in that target group.\\\\
+A second reason for 'idle' behavior can be that the malware detects that it is being executed inside a sandbox, and Cuckoo Sandbox does not mitigate the method this malware uses to detect it. The malware might do this by looking for known names for virtual devices like network interfaces, hard drives and others. Other ways of detecting a sandbox are possible \cite{keragala-evasion}.\\
+
+\textbf{Process/DLL injection}\\
+Both banking malware families display the use of process/DLL injection. Specifically the type 'remote thread injection'. The malicious process opens a process handle which it uses to write a path of a malicious DLL to the process handle's memory. The malicious process then starts a remote thread using the 'CreateRemoteThread' API call which then loads the malicious DLL. This action is usually performed using a legitimate Windows process like Explorer.exe  \cite{alasiri-dll-injection}.\\\\There are multiple likely reasons a malware author chose to use this. The first reason is that is allows for the first process to exit and the malware run under a legitimate Windows process name. The second reason is that a legitimate process is likely to keep running as long as the operating system is running. A third reason is that this allows for the malware to only exist in the system memory and not on disk, which makes it harder to detect.\\
+
+\textbf{Crashed}\\
+Some of the malware families also contain a 'Failed or crashed' group. The malware process in the analyses of this group crashed. There are several reasons for this, the two most observed reasons are: trying to access a part of the memory to which the malware process does not have access and it being killed as a result. The second reason observed is the importing of non-existing DLLs, which also results in crashes.
 
 % trigger a \newpage just before the given reference
 % number - used to balance the columns on the last page
@@ -467,6 +486,16 @@ Sourcefire
 D. Huss and M. Mesa, "In the Shadows: Vawtrak Aims to Get Stealthier by adding New Data Cloaking",
 https://www.proofpoint.com/us/threat-insight/post/In-The-Shadows
 Proofpoint, 2015
+
+\bibitem{keragala-evasion}
+D.  Keragala, "Detecting Malware and Sandbox Evasion Techniques",
+SANS, January 2016, pp. 2-6
+
+\bibitem{alasiri-dll-injection}
+A. Alasiri, M. Alzaidi , D. Lindskog, P. Zavarsky, R. Ruhl, S. Alassmi,
+"Comparative Analysis of Operational Malware Dynamic Link",
+Concordia University College of Alberta, July 2012,
+pp. 1-5.
 
 \end{thebibliography}
 
