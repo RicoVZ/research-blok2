@@ -159,7 +159,7 @@ Our hypothesis is that dumping process memory during the execution of malware in
 \subsection{Research design}
 The research consists out of  multiple steps which are explained below.\\
 
-The first step is the collecting of malware samples of two families for ransomware and banking malware. An external expert malware researcher and Cuckoo Sandbox developer will assist in collecting these. \\\\The current Cuckoo Sandbox version(2.0-RC1) does not support making process memory  dumps at intervals (timeslots). This means a modified version of Cuckoo that does support this will need to be created. This modified version will then be used to create a Cuckoo instance.\\\\Yara, with a set of signatures, will be used to automatically recognize configuration data in the memory. These signatures will be created by first analyzing two samples from each malware family from the dataset using the Cuckoo instance. \\\\The goal of each analysis is to find out when the malware starts communicating with its C2 because at this moment the configuration data should be in the memory.\\The memory dumps created at this moment will be manually analyzed with the goal of finding patterns usable to create Yara signatures.\\\\ When all signatures are ready for usage, all malware samples from the dataset will be executed on the Cuckoo instance. During this execution, all memory dumps are created and sorted per analysis and grouped by family.\\\\For each malware family the Yara signatures will then be used to verify, for each analysis, in which of the memory dumps the configuration data is present. The memory dumps are sorted into timeslots which can later be used in a timeline.\\\\The verification process will be used to conclude in which of the timeslots the configuration data is present. These conclusions will then be used to create a timeline for each analysis.  The timelines of each analysis will then be combined to create a new timeline for the malware family the analyses belong to, showing the average time in which the configuration data is present in memory. These per-family timelines will be combined into one timeline. \\\\This final timeline proves or disproves our hypothesis and should show the most likely moment in which the configuration data is in the memory.\\\\ \textbf{Presentation of results}\\
+The first step is the collecting of malware samples of two families for ransomware and banking malware. An external expert malware researcher and Cuckoo Sandbox developer will assist in collecting these. \\\\The current Cuckoo Sandbox version(2.0-RC1) does not support making process memory  dumps at intervals (timeslots). This means a modified version of Cuckoo that does support this will need to be created. This modified version will then be used to create a Cuckoo instance.\\\\Yara, with a set of signatures, will be used to automatically recognize configuration data in the memory. These signatures will be created by first analyzing two samples from each malware family from the dataset using the Cuckoo instance. \\\\The goal of each analysis is to find out when the malware starts communicating with its C2 because at this moment the configuration data should be in the memory.\\The memory dumps created at this moment will be manually analysed with the goal of finding patterns usable to create Yara signatures.\\\\ When all signatures are ready for usage, all malware samples from the dataset will be executed on the Cuckoo instance. During this execution, all memory dumps are created and sorted per analysis and grouped by family.\\\\For each malware family the Yara signatures will then be used to verify, for each analysis, in which of the memory dumps the configuration data is present. The memory dumps are sorted into timeslots which can later be used in a timeline.\\\\The verification process will be used to conclude in which of the timeslots the configuration data is present. These conclusions will then be used to create a timeline for each analysis.  The timelines of each analysis will then be combined to create a new timeline for the malware family the analyses belong to, showing the average time in which the configuration data is present in memory. These per-family timelines will be combined into one timeline. \\\\This final timeline proves or disproves our hypothesis and should show the most likely moment in which the configuration data is in the memory.\\\\ \textbf{Presentation of results}\\
 The measured results will be presented in a visual form by the use of charts and graphs in the form of timelines.
 
 
@@ -325,7 +325,7 @@ The timelines for this group of analyses show that the configuration data is pre
 Figure \ref{fig:locky-timeline-expected} shows a timeline for an analysis of this group.\\
 
 \textbf{Continuous communication }\\
-Analyses in this group immediately start to communicate with their C2, which is not responding, and continue to do so until the end of the analysis. The configuration data is present in the memory during the entire length of the analysis. This corresponds with the expected behavior of some of the analyzed Locky samples in \cite{nelson-locky}.
+Analyses in this group immediately start to communicate with their C2, which is not responding, and continue to do so until the end of the analysis. The configuration data is present in the memory during the entire length of the analysis. This corresponds with the expected behavior of some of the analysed Locky samples in \cite{nelson-locky}.
 
 Figure \ref{fig:locky-timeline-continuous} shows a timeline for an analysis of this group.\\
  
@@ -398,6 +398,29 @@ Both banking malware families display the use of process/DLL injection. Specific
 
 \textbf{Crashed}\\
 Some of the malware families also contain a 'Failed or crashed' group. The malware process in the analyses of this group have crashed. There are several reasons for this, of which two were often observed. The first is trying to access a part of the memory to which the malware process does not have access and it being killed as a result. The second reason observed is the importing of non-existing DLLs, which can also result in a crash.
+
+\section{Conclusion}
+This section contains the conclusion of the data analysis.\\ This research examined two types of malware: Ransomware and Banking malware. For each type, samples from two malware families were used. The used malware families are Locky and Teslacrypt for the Ransomware type and Zeus and Vawtrak for the Banking malware type. The final results can been viewed at figure \ref{fig:barchart-all}, \ref{fig:barchart-banking}, and \ref{fig:barchart-ransom}. These figures show the results for all analyses combined, the results for only banking analyses combined, and the results for only ransomware analyses combined.
+
+\begin{figure}[!h]
+    \includegraphics[width=10cm,scale=0.5]{images/final/final-barchart.eps}
+    \caption{A chart showing the combined timelines of presence of configuration data during the analysis of all malware samples}
+    \label{fig:barchart-all}
+\end{figure}
+
+\begin{figure}[!h]
+    \includegraphics[width=10cm,scale=0.5]{images/final/banking-barchart.eps}
+    \caption{A chart showing the combined timelines of presence of configuration data during the analysis of all banking malware samples}
+    \label{fig:barchart-banking}
+\end{figure}
+
+\begin{figure}[!h]
+    \includegraphics[width=10cm,scale=0.5]{images/final/ransomware-barchart.eps}
+    \caption{A chart showing the combined timelines of presence of configuration data during the analysis of all ransomware samples}
+    \label{fig:barchart-ransom}
+\end{figure}
+
+
 
 % trigger a \newpage just before the given reference
 % number - used to balance the columns on the last page
