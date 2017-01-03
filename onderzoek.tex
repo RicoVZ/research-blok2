@@ -1,5 +1,5 @@
 \documentclass[conference]{IEEEtran}
-\usepackage{pdfpages, etoolbox, afterpage, graphicx, adjustbox}
+\usepackage{pdfpages, etoolbox, afterpage, graphicx, adjustbox, glossaries}
 \usepackage[hidelinks]{hyperref}
 
 \pagenumbering{arabic}
@@ -32,30 +32,88 @@
   % \DeclareGraphicsExtensions{.eps}
 \fi
 
-\hyphenation{op-tical net-works semi-conduc-tor}
+\makeglossaries
 
+\newglossaryentry{configuration data}
+{
+	name=Configuration data,
+	description={Malware usually communicates with command and control (C2) servers. We call the IP addresses, ports, encryption keys, URLs,   other information used to communicate, and other information used by the malware: configuration data}
+}
+\newglossaryentry{C2}
+{
+	name=C2,
+	description={Command and Control server. A centralised server used to control malware which is active on a computer. The malware and C2 communicate to exchange information, malware updates, issue commands to the malware, etc}
+}
+\newglossaryentry{time slots}
+{
+	name=Time slots,
+	description={The used time intervals at which a process memory dump is created during a Cuckoo Sandbox analysis}
+}
+\newglossaryentry{IOC}
+{
+	name=IOC,
+	description={Indicator of compromise. Any piece of data or artifact which can indicate a compromise of some kind. Malware in this case. It can be used to find certain information used by malware, like the configuration data}
+}
+\newglossaryentry{sleeping}
+{
+	name=Sleeping,
+	description={The use of a certain system API that causes a delay in the execution of a process. This can be an NtDelayExecution call or repeatedly performing action which relatively takes a lot of time}
+}
+\newglossaryentry{malicious actions}
+{
+	name=Malicious actions,
+	description={Actions that are generally unwanted and are considered behavior of malware. Example: deleting files, encrypting files, trying to hide a process, etc}
+}
 
 \begin{document}
 
+\begin{titlepage}
 
-\title{Malware, when to extract configuration data from system memory}
+\newcommand{\HRule}{\rule{\linewidth}{0.4mm}} % Defines a new command for the horizontal lines, change thickness here
 
+\center % Center everything on the page
+ 
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
 
-% author names and affiliations
-% use a multiple column layout for up to three different
-% affiliations
-\author{\IEEEauthorblockN{Jeroen Kraan}
-\IEEEauthorblockA{Hogeschool van Amsterdam\\
-Email: Jeroen.Kraan@hva.nl}
-\and
-\IEEEauthorblockN{Ricardo van Zutphen}
-\IEEEauthorblockA{Hogeschool van Amsterdam\\
-Email: Ricardo.van.Zutphen@hva.nl}}
+\textsc{\LARGE Hogeschool van Amsterdam}\\[1.2cm] 
+\textsc{\Large System \& Network Engineering}\\[0.5cm] 
 
 
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
 
-% make the title area
-\maketitle
+\HRule \\[0.6cm]
+{ \huge \bfseries Malware, when to extract configuration data from system memory}\\[0.4cm] % Title of your document
+\textsc{\large Finding the most likely moment during the execution of a malware binary in which the system memory contains the malware's configuration data}\\[0.5cm] % Minor heading such as course title
+\HRule \\[4.0cm]
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{minipage}{1.4\textwidth}
+\begin{flushleft} \large
+\emph{Authors:}\\
+Jeroen Kraan - Jeroen.Kraan@hva.nl\\
+Ricardo van Zutphen - Ricardo.van.Zutphen@hva.nl
+\end{flushleft}
+\end{minipage}
+
+\begin{minipage}{0.4\textwidth}
+\end{minipage}\\[4cm]
+
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
 \onecolumn
 \tableofcontents
 
@@ -87,11 +145,12 @@ Email: Ricardo.van.Zutphen@hva.nl}}
 \IEEEpeerreviewmaketitle
 
 
+
 \section{Introduction}
 Dynamic malware analysis is an important tool to recognize and help understand new threats in the form of malware. 
-Dynamic malware analysis is studying the behaviour of malware while it is being executed on a controlled host computer. This can be in a virtualized environment or on a physical machine. The purpose of dynamic analysis is to collect behavioural data like arguments used in system API calls, the contents of the system memory, and network communications. Network communication is an important way to recognize ‘who’ the malware is communicating with. The ‘who’ is called a command and control server (C2). C2s are part of what is called a malware configuration. This can contain C2s, version numbers, and any other information used by a specific type of malware.\\
+Dynamic malware analysis is studying the behaviour of malware while it is being executed on a controlled host computer. This can be in a virtualized environment or on a physical machine. The purpose of dynamic analysis is to collect behavioural data like arguments used in system API calls, the contents of the system memory, and network communications. Network communication is an important way to recognize ‘who’ the malware is communicating with. The ‘who’ is called a command and control server (\Gls{C2}). C2s are part of what is called a malware configuration. This can contain C2s, version numbers, and any other information used by a specific type of malware.\\
 
-One way to collect parts of the configuration data is to look at the network communication of malware. Another type is trying to retrieve the configurations or part of it from process memory dumps.\\
+One way to collect parts of the \Gls{configuration data} is to look at the network communication of malware. Another type is trying to retrieve the configurations or part of it from process memory dumps.\\
 
 Automated Dynamic malware analysis systems like Cuckoo Sandbox try to automate this process by making memory dumps at a point during the execution of the malware. These memory dumps can then be analysed by various tools. The question is: at what point in execution does the system memory contain the malware configuration?\\
 
@@ -166,7 +225,7 @@ Our hypothesis is that dumping process memory during the execution of malware in
 \subsection{Research design}
 The research consists out of  multiple steps which are explained below.\\
 
-The first step is the collecting of malware samples of two families for ransomware and banking malware. An external expert malware researcher and Cuckoo Sandbox developer will assist in collecting these. \\\\The current Cuckoo Sandbox version(2.0-RC1) does not support making process memory  dumps at intervals (timeslots). This means a modified version of Cuckoo that does support this will need to be created. This modified version will then be used to create a Cuckoo instance.\\\\Yara, with a set of signatures, will be used to automatically recognize configuration data in the memory. These signatures will be created by first analyzing two samples from each malware family from the dataset using the Cuckoo instance. \\\\The goal of each analysis is to find out when the malware starts communicating with its C2 because at this moment the configuration data should be in the memory.\\The memory dumps created at this moment will be manually analysed with the goal of finding patterns usable to create Yara signatures.\\\\ When all signatures are ready for usage, all malware samples from the dataset will be executed on the Cuckoo instance. During this execution, all memory dumps are created and sorted per analysis and grouped by family.\\\\For each malware family the Yara signatures will then be used to verify, for each analysis, in which of the memory dumps the configuration data is present. The memory dumps are sorted into timeslots which can later be used in a timeline.\\\\The verification process will be used to conclude in which of the timeslots the configuration data is present. These conclusions will then be used to create a timeline for each analysis.  The timelines of each analysis will then be combined to create a new timeline for the malware family the analyses belong to, showing the average time in which the configuration data is present in memory. These per-family timelines will be combined into one timeline. \\\\This final timeline proves or disproves our hypothesis and should show the most likely moment in which the configuration data is in the memory.\\\\ \textbf{Presentation of results}\\
+The first step is the collecting of malware samples of two families for ransomware and banking malware. An external expert malware researcher and Cuckoo Sandbox developer will assist in collecting these. \\\\The current Cuckoo Sandbox version(2.0-RC1) does not support making process memory dumps at intervals (\Gls{time slots}). This means a modified version of Cuckoo that does support this will need to be created. This modified version will then be used to create a Cuckoo instance.\\\\Yara, with a set of signatures, will be used to automatically recognize configuration data in the memory. These signatures will be created by first analyzing two samples from each malware family from the dataset using the Cuckoo instance. \\\\The goal of each analysis is to find out when the malware starts communicating with its C2 because at this moment the configuration data should be in the memory.\\The memory dumps created at this moment will be manually analysed with the goal of finding patterns usable to create Yara signatures.\\\\ When all signatures are ready for usage, all malware samples from the dataset will be executed on the Cuckoo instance. During this execution, all memory dumps are created and sorted per analysis and grouped by family.\\\\For each malware family the Yara signatures will then be used to verify, for each analysis, in which of the memory dumps the configuration data is present. The memory dumps are sorted into time slots which can later be used in a timeline.\\\\The verification process will be used to conclude in which of the time slots the configuration data is present. These conclusions will then be used to create a timeline for each analysis.  The timelines of each analysis will then be combined to create a new timeline for the malware family the analyses belong to, showing the average time in which the configuration data is present in memory. These per-family timelines will be combined into one timeline. \\\\This final timeline proves or disproves our hypothesis and should show the most likely moment in which the configuration data is in the memory.\\\\ \textbf{Presentation of results}\\
 The measured results will be presented in a visual form by the use of charts and graphs in the form of timelines.
 
 
@@ -193,7 +252,7 @@ The hashes for the Locky samples were collected from 'Ransomwaretracker'\footnot
 The hashes for the TeslaCrypt were collected from 'Ransomwaretracker' and given to us by the external malware researcher. \\\\The set for this family contains 115 samples, each of these files is a PE32 executable. TeslaCrypt is a ransomware family. The binaries in this set do not have to download all their configuration data, part of it is already embedded in the file in the form of  multiple URLS \cite{wyke-currans}. The Shannon Entropy score for each sample in this set is 6.068 or higher, the average is 6.777. this indicates that the samples are most likely packed executables, but could also be native executables containing compressed or encrypted sections \cite{hamrock-entropy}.
 
 \section{Recognizing the in-memory malware configuration}
-Yara is used to be able to recognize the memory of the processes containing the in-memory malware configurations. To be able to do this, a signature is needed for each malware family. The signatures were created by first using Cuckoo to analyse two or more samples from each family and then finding indicators of compromise(IOC) in the created memory dumps, and collecting IOCs from public sources. \\\\Each signature was tested on a set of 30 analyses of the corresponding malware family. While testing, the possibility of the malware not loading the configuration or the malware process crashing, was taken into account. Therefore the goal was create a signature that matches at least 25 out of 30 cases, before considering the signature usable. \\\\This section will explain what Yara signature will be used to identify the in-memory configuration data for each malware family.\\ All created Yara signatures are listed in appendix B.\\
+Yara is used to be able to recognize the memory of the processes containing the in-memory malware configurations. To be able to do this, a signature is needed for each malware family. The signatures were created by first using Cuckoo to analyse two or more samples from each family and then finding indicators of compromise(\Gls{IOC}) in the created memory dumps, and collecting IOCs from public sources. \\\\Each signature was tested on a set of 30 analyses of the corresponding malware family. While testing, the possibility of the malware not loading the configuration or the malware process crashing, was taken into account. Therefore the goal was create a signature that matches at least 25 out of 30 cases, before considering the signature usable. \\\\This section will explain what Yara signature will be used to identify the in-memory configuration data for each malware family.\\ All created Yara signatures are listed in appendix B.\\
 
 \textbf{Signature: Zeus}
 \\The Zeus Yara signature consists of 18 IOCs in the form of a set of strings. These strings are filenames and are part of a URL stored in the configuration data in the process memory. These recurring strings were found by examining multiple Cuckoo analyses of Zeus and collected from a public source \cite{zeus-ioc}.\\The URLs were found by searching the memory for the resolved domain names by the malware during the Cuckoo analysis. The Zeus signature will match if any of the listed IOCs are found in a memory dump.\\
@@ -225,7 +284,7 @@ The analysis of the Zeus family resulted in data for 104 out of 115 used malware
 \newpage
 \textbf{Expected Zeus behavior}
 \\Analyses in this group display the expected Zeus behavior: \cite{wyke-zeus} after execution of the first binary, its process creates a copy of itself to a second binary. The first process then starts a second process using the copied binary and writes to its process memory, after which, the first process terminates.\\ Shortly after the second process has started, it starts to unpack a third binary file by to reading it from its own binary. As soon as this is done, a process is started using the third binary.
-\\\\The third binary is the actual Zeus malware which performs the malicious actions. It is possible that this third binary also copied itself and creates a process of this copy, but this is not always the case. Before trying to perform a range of different malicious actions (collecting passwords, editing settings etc), the malicious process tries to contact its C2. After this step, a batch script is created which deletes all previous binary files used to infect the system. Up until this moment, the configuration data included in the binary, is found in the memory. The process of copying, unpacking, contacting the C2, and erasing the binaries used to infect the system takes from 10 to 100 seconds. This is also the time the configuration data is present in the memory. The average is 40 seconds.  Figure \ref{fig:zeus-timeline-normal} is a corresponding timeline for this group. \\\\A second type of behavior is included in this group. It is similar to the type mentioned above. The difference is that this type does not start by copying itself, but by first delaying execution time by making the first process 'sleep'. After the sleep, normal execution resumes. The average time of when the configuration data is in memory is from 70 to 130 seconds. Figure \ref{fig:zeus-timeline-normal-delay} shows a timeline of an analysis of this type.
+\\\\The third binary is the actual Zeus malware which performs the \Gls{malicious actions}. It is possible that this third binary also copied itself and creates a process of this copy, but this is not always the case. Before trying to perform a range of different malicious actions (collecting passwords, editing settings etc), the malicious process tries to contact its C2. After this step, a batch script is created which deletes all previous binary files used to infect the system. Up until this moment, the configuration data included in the binary, is found in the memory. The process of copying, unpacking, contacting the C2, and erasing the binaries used to infect the system takes from 10 to 100 seconds. This is also the time the configuration data is present in the memory. The average is 40 seconds.  Figure \ref{fig:zeus-timeline-normal} is a corresponding timeline for this group. \\\\A second type of behavior is included in this group. It is similar to the type mentioned above. The difference is that this type does not start by copying itself, but by first delaying execution time by making the first process 'sleep'. After the sleep, normal execution resumes. The average time of when the configuration data is in memory is from 70 to 130 seconds. Figure \ref{fig:zeus-timeline-normal-delay} shows a timeline of an analysis of this type.
 
 
 \newpage
@@ -282,7 +341,7 @@ The analysis of the Vawtrak family resulted in data for 107 out of 115 used malw
 \\Analyses in this group do display Vawtrak behavior\cite{kroustek-vawtrak}, but only briefly. After the execution of its binary, the process starts by looking for registry keys and file paths of commonly used software and tries to find stored credentials. The process does not try to contact its C2. The next step taken is creating a Windows batch file containing code to delete the Vawtrak binary and itself. This file is then executed. Timelines for this group of analyses show that the configuration data is present in the memory for 10 to 30 seconds after the analysis has started. Figure \ref{fig:vawtrak-timeline-brief} shows a timeline for an analysis of this group.\\
 
 \textbf{Injection into other process}
-\\Analyses in this group start by delaying execution by sleeping for one to two minutes, during which the configuration data is not present in the memory. After the delay, the process starts unpacking a second binary from its own binary. At this time, the configuration data is present in the memory. When the process has finished unpacking the second binary, it configures Windows to start the binary at Windows startup. The last step taken is injecting itself into another process by acquiring a process handle and writing to its memory. The Windows process being injected seems to be different every analysis. Figure \ref{fig:vawtrak-timeline-injection} shows a timeline for an analysis of this group.\\
+\\Analyses in this group start by delaying execution by \Gls{sleeping} for one to two minutes, during which the configuration data is not present in the memory. After the delay, the process starts unpacking a second binary from its own binary. At this time, the configuration data is present in the memory. When the process has finished unpacking the second binary, it configures Windows to start the binary at Windows startup. The last step taken is injecting itself into another process by acquiring a process handle and writing to its memory. The Windows process being injected seems to be different every analysis. Figure \ref{fig:vawtrak-timeline-injection} shows a timeline for an analysis of this group.\\
 
 \textbf{Idle}
 \\Analyses in this group do not have any configuration data in the memory at any point during the analysis. The started process delays the analysis by sleeping immediately after  being executed. These sleeps last for one to three minutes, after which it injects itself into another process by acquiring a process handle and writing to its memory. Figure \ref{fig:vawtrak-timeline-idle} shows a timeline for an analysis of this group.
@@ -440,6 +499,9 @@ This part of the conclusion applies to a case in which banking malware is being 
 This part of the conclusion applies to a case in which ransomware is being analysed. Figure \ref{fig:barchart-ransom} is a bar chart displaying an overview for all ransomware analyses. While this chart does have a peak in the amount of samples for which the configuration data is present from 60 to 110 seconds, the amount of samples containing the configuration data only slightly drops each timeslot. For ransomware, the most likely moment at which the configuration data is present in the system memory is from 60 to 110 seconds into the analysis. After this point, however, the chart shows it is still likely that the configuration data will be present in the system memory.
 
 
+\subsection{Recommendations}
+The two used malware types during this research yielded different times at which it is likely that the configuration data is present in the system memory. It is therefore recommended to perform further research into other malware types, such as Remote Access Trojans (RAT). To further confirm and increase the practicality of the findings mentioned in the conclusions about Banking malware and Ransomware, it is recommended that this report is used to perform research into more malware families of each type.
+
 \newpage
 \afterpage{\blankpage}
 \apptocmd{\thebibliography}{\setlength{\itemsep}{3pt}}{}{}
@@ -520,6 +582,11 @@ Concordia University College of Alberta, July 2012,
 pp. 1-5.
 
 \end{thebibliography}
+
+\newpage
+\thispagestyle{empty}
+\printglossary[style=altlist]
+\addcontentsline{toc}{section}{Glossary}
 
 \newpage
 \thispagestyle{empty}
