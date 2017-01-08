@@ -10,6 +10,8 @@
     \thispagestyle{plain}%
     \addtocounter{page}{0}%
     \newpage}
+    
+\renewcommand\IEEEkeywordsname{Keywords}
 
 % *** GRAPHICS RELATED PACKAGES ***
 %
@@ -89,6 +91,7 @@
 { \huge \bfseries Malware, when to extract configuration data from system memory}\\[0.4cm] % Title of your document
 \textsc{\large Finding the most likely moment during the execution of a malware binary in which the system memory contains the malware's configuration data}\\[0.5cm] % Minor heading such as course title
 \HRule \\[4.0cm]
+
  
 %----------------------------------------------------------------------------------------
 %	AUTHOR SECTION
@@ -123,8 +126,12 @@ Ricardo van Zutphen - Ricardo.van.Zutphen@hva.nl
 \pagestyle{plain}
 \begin{abstract}
 Dynamic malware analysis is an important tool to recognize and help understand new threats in the form of malware. It can be used to automatically extract \Gls{configuration data} from a malware sample's process memory. In this research, the term \Gls{configuration data} is used to  describe the IP addresses, ports, encryption keys, URLs, and other information used by the malware as a group. To be able to extract the \Gls{configuration data}, a dynamic malware analysis system must know when to create process memory dumps, from which to extract the data. The problem is that the exact moment in time where the information resides in the memory is not usually known. This research focuses on finding the best moment to create process memory dumps. To perform this research, a dataset of two malware types is used. Each type consists  of a set of samples of two malware families.
-The used families are Locky and Teslacrypt (Ransomware) and Zeus and Vawtrak (Banking malware). These malware samples are analysed using Cuckoo Sandbox, while also creating process memory dumps at a set interval of 10 seconds during the analysis. Part of the analysis results and memory dumps are examined to find indicators of compromise (\Gls{IOC}) that indicate the presence of \Gls{configuration data}. These \Gls{IOC}s are then used to create Yara signatures with the ability to recognize in-memory \Gls{configuration data} for a specific malware family. The malware samples of all families are then analysed using Cuckoo Sandbox, after which the results are grouped together to create behavioral groups, and the signatures are used to creates per-analysis timelines indicating at what time during an analysis the \Gls{configuration data} was present in the system memory. Timelines of each type are then grouped together to create an overview showing the most common moment in time at which the data was present for each malware family and type. Using these overviews, the most likely time at which the \Gls{configuration data} is present in the system memory can be determined.
+The used families are Locky and Teslacrypt (Ransomware) and Zeus and Vawtrak (Banking malware). These malware samples are analysed using Cuckoo Sandbox, while also creating process memory dumps at a set interval of 10 seconds during the analysis. Part of the analysis results and memory dumps are examined to find indicators of compromise (\Gls{IOC}) that indicate the presence of \Gls{configuration data}. These \Gls{IOC}s are then used to create Yara signatures with the ability to recognize in-memory \Gls{configuration data} for a specific malware family. The malware samples of all families are then analysed using Cuckoo Sandbox, after which the results are grouped together to create behavioral groups, and the signatures are used to creates per-analysis timelines indicating at what time during an analysis the \Gls{configuration data} was present in the system memory. Timelines of each type are then grouped together to create an overview showing the most common moment in time at which the data was present for each malware family and type. Using these overviews, the most likely time at which the \Gls{configuration data} is present in the system memory can be determined.\\
 \end{abstract}
+
+\begin{IEEEkeywords}
+Malware configuration data extraction, dynamic malware analysis, in-memory configuration data, process memory dump, most likely time of configuration data presence
+\end{IEEEkeywords}
 
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
