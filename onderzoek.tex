@@ -219,7 +219,7 @@ The installed software on all virtual machines is:
 \item .NET framework 4.0
 \end{itemize}
 
-\ \\Using Yara, a tool using signatures to recognize data structures in binary  data, it will determined if a malware configuration is present in the memory dump or not \cite{roberston-ioc}.
+\ \\Using Yara, a tool using signatures to recognize data structures in binary  data, it will be determined if a malware configuration is present in the memory dump or not \cite{roberston-ioc}.
 
 The data collected by measuring the presence of the malware configuration in the memory dumps will be used to create a timeline containing the average time in which the configuration resides in the system memory.
 
@@ -244,7 +244,7 @@ The measured results will be presented in a visual form by the use of charts and
 The collected dataset consists of 460 malware samples. The malware families included in this set are Zeus and Vawtrak, which is banking malware, and the families Locky and TeslaCrypt, which are ransomware.  The samples were collected  by first searching for file hashes, which can be used to uniquely identify a file,  and then collecting the corresponding malware samples with the help of an external expert malware researcher. The researcher used his privileges with the online malware analysis platform VirusTotal, to obtain the malware samples. The platforms 'Zeustracker', 'SSL Blacklist', and 'Ransomwaretracker' were used to collect hashes for Zeus, Vawtrak, Locky, and Teslacrypt. These platforms are all part of 'abuse.ch', a platform were malware \Gls{C2}s. binary hashes, and configurations are collected \footnote{\url{https://zeustracker.abuse.ch/faq.php}}. All collected file hashes are listed in appendix A.
 
 \subsection{Attributes}	
-This section contains information about each malware family and the collected samples for this family. It lists the amount of samples to be used, the file types in the dataset, and the entropy score for each file. A malware binary can be packed or encrypted in order to hide its code, any \Gls{configuration data}, and any other strings. These are the samples that will be used because they likely contain some form of \Gls{configuration data}. \\\\Compressed and encrypted binaries have a high entropy, this entropy can be measured in the form of Shannon Entropy \cite{hamrock-entropy}. The result of this measurement is a floating point number. Using this number and the table mentioned in \cite{hamrock-entropy}, which contains statistical measures based on different types of data, it can determined if a sample is most likely a native, packed or an encrypted executable.
+This section contains information about each malware family and the collected samples for this family. It lists the amount of samples to be used, the file types in the dataset, and the entropy score for each file. A malware binary can be packed or encrypted in order to hide its code, any \Gls{configuration data}, and any other strings. These are the samples that will be used because they likely contain some form of \Gls{configuration data}. \\\\Compressed and encrypted binaries have a high entropy, this entropy can be measured in the form of Shannon Entropy \cite{hamrock-entropy}. The result of this measurement is a floating point number. Using this number and the table mentioned in \cite{hamrock-entropy}, which contains statistical measures based on different types of data, it can be determined if a sample is most likely a native, packed or an encrypted executable.
 \\\\
 
 \textbf{Zeus}\\
